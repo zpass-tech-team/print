@@ -1,10 +1,14 @@
 package io.mosip.print.model;
 
-public class MOSIPMessage {
+//JSON Serializable
+public class Message {
     private String publisher;
     private String topic;
     private String publishedOn;
-    Event event;
+    //Reverse the event and payload based on serialize or deserialize
+    private String payload; //JWT <header>.<eventpayload>.<signature>
+    //interchange with payload do not serialize
+    Event event; //JWT <eventpayload> deserilized
 
 
  // Getter Methods 
@@ -23,6 +27,10 @@ public class MOSIPMessage {
 
  public Event getEvent() {
   return event;
+ }
+
+ public String getPayload(){
+
  }
 
  // Setter Methods 

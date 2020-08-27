@@ -3,11 +3,13 @@ package io.mosip.print.model;
 import java.util.ArrayList;
 
 public class Event {
-    private String id;
-    private String transactionId;
+    private String id; //uuid
+    private String transactionId; //privided by the publisher.
+    private String version;
     Type type;
-    private String timestamp;
-    private String dataShareUri;
+    private String timestamp; //ISO format
+    private String dataShareUri; //URL
+    //JSONObject
     ArrayList <Object> data = new ArrayList <Object> ();
    
    
