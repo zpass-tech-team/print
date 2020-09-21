@@ -20,17 +20,17 @@ implements ApplicationListener<ApplicationReadyEvent> {
     @Autowired
   SubscriptionClient<SubscriptionChangeRequest,UnsubscriptionRequest, SubscriptionChangeResponse> sb; 
   
-    //@Value("${mosip.event.hubURL}")   
-  private String hubURL="http://localhost:9191/websub/hub";
+  @Value("${mosip.event.hubURL}")   
+  private String hubURL;
   
   @Value("${mosip.event.topic}")
   private String topic;
  
 
- // @Value("${mosip.event.secret}")
+  @Value("${mosip.event.secret}")
   private String secret="test";
   
-  private String topicName="792112/CREDENTIAL_ISSUED";
+  //private String topicName="792112/CREDENTIAL_ISSUED";
   /**
    * This event is executed as late as conceivably possible to indicate that 
    * the application is ready to service requests.
@@ -41,7 +41,7 @@ implements ApplicationListener<ApplicationReadyEvent> {
     
     SubscriptionChangeRequest subscriptionChangeRequest = new SubscriptionChangeRequest();
     subscriptionChangeRequest.setHubURL(hubURL);
-    subscriptionChangeRequest.setTopic(topicName);
+    subscriptionChangeRequest.setTopic(topic);
     subscriptionChangeRequest.setSecret(secret);
     subscriptionChangeRequest.setCallbackURL("http://localhost:8098/print/callback/notifyPrint");
     subscriptionChangeRequest.setLeaseSeconds(320);

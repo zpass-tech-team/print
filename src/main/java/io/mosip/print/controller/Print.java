@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/print")
 public class Print {
 
-	//@Value("${mosip.event.secret}")
-	  //private String secret;
+	@Value("${mosip.event.secret}")
+	private String secret;
 	
 	//@Autowired
 	//PrintService printService;
