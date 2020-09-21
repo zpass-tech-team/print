@@ -40,7 +40,7 @@ implements ApplicationListener<ApplicationReadyEvent> {
   public void onApplicationEvent(final ApplicationReadyEvent event) {
     
     SubscriptionChangeRequest subscriptionChangeRequest = new SubscriptionChangeRequest();
-    subscriptionChangeRequest.setHubURL(hubURL);
+    subscriptionChangeRequest.setHubURL(hubURL+"/hub");
     subscriptionChangeRequest.setTopic(topic);
     subscriptionChangeRequest.setSecret(secret);
     subscriptionChangeRequest.setCallbackURL("http://localhost:8098/print/callback/notifyPrint");
