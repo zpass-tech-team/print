@@ -28,7 +28,7 @@ implements ApplicationListener<ApplicationReadyEvent> {
  
 
   @Value("${mosip.event.secret}")
-  private String secret="test";
+  private String secret;
   
   //private String topicName="792112/CREDENTIAL_ISSUED";
   /**
@@ -44,7 +44,7 @@ implements ApplicationListener<ApplicationReadyEvent> {
     subscriptionChangeRequest.setTopic(topic);
     subscriptionChangeRequest.setSecret(secret);
     subscriptionChangeRequest.setCallbackURL("http://localhost:8098/print/callback/notifyPrint");
-    subscriptionChangeRequest.setLeaseSeconds(320);
+   // subscriptionChangeRequest.setLeaseSeconds(320);
     //subscriptionChangeRequest.setLeaseSeconds(leaseSeconds);
     //HttpHeaders httpHeaders=new HttpHeaders();
    // sb.publishUpdate(issuer+"/"+"CREDENTIAL_ISSUED", eventModel, MediaType.APPLICATION_JSON_UTF8_VALUE, httpHeaders,  hubURL);
