@@ -26,7 +26,7 @@ public class PrintInitializer implements ApplicationListener<ApplicationReadyEve
 	/**
 	 * Default is Zero which will disable the scheduling.
 	 */
-	@Value("${print-websub-resubscription-delay-secs:0}")
+	@Value("${print-websub-resubscription-delay-secs:7200}")
 	private int reSubscriptionDelaySecs;
 
 	@Autowired
