@@ -1,5 +1,6 @@
 package io.mosip.print.exception;
 
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 public class CryptoManagerException extends BaseUncheckedException {
 
