@@ -81,15 +81,19 @@ public class CryptoCoreUtil {
 
 		int keyDemiliterIndex = getSplitterIndex(requestData, 0, keySplitter);
 		byte[] encryptedKey = copyOfRange(requestData, 0, keyDemiliterIndex);
+		byte[] decryptedSymmetricKey = null;
 		try {
 			encryptedData = copyOfRange(requestData, keyDemiliterIndex + keySplitterLength, cipherKeyandDataLength);
 			// byte[] dataThumbprint = Arrays.copyOfRange(encryptedKey, 0,
 			// THUMBPRINT_LENGTH);
 			if (isThumbprint) {
 				encryptedSymmetricKey = Arrays.copyOfRange(encryptedKey, THUMBPRINT_LENGTH, encryptedKey.length);
+				decryptedSymmetricKey = asymmetricDecrypt(privateKey.getPrivateKey(),
+						((RSAPrivateKey) privateKey.getPrivateKey()).getModulus(), encryptedSymmetricKey);
 			} else {
-				encryptedSymmetricKey = Arrays.copyOfRange(encryptedKey, keyDemiliterIndex + keySplitterLength,
-						cipherKeyandDataLength);
+				decryptedSymmetricKey = asymmetricDecrypt(privateKey.getPrivateKey(),
+						((RSAPrivateKey) privateKey.getPrivateKey()).getModulus(),
+						encryptedKey);
 			}
 			// byte[] certThumbprint =
 			// getCertificateThumbprint(privateKey.getCertificate());
@@ -99,8 +103,6 @@ public class CryptoCoreUtil {
 			 * Exception("Error in generating Certificate Thumbprint."); }
 			 */
 
-			byte[] decryptedSymmetricKey = asymmetricDecrypt(privateKey.getPrivateKey(),
-					((RSAPrivateKey) privateKey.getPrivateKey()).getModulus(), encryptedSymmetricKey);
 			symmetricKey = new SecretKeySpec(decryptedSymmetricKey, 0, decryptedSymmetricKey.length, "AES");
 			return symmetricDecrypt(symmetricKey, encryptedData, null);
 		} catch (Exception e) {
