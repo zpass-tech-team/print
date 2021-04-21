@@ -50,7 +50,7 @@ public class CryptoCoreUtil {
 
 	private final static int THUMBPRINT_LENGTH = 32;
 
-	@Value("${mosip.credential.service.share.prependThumbprint:false}")
+	@Value("${mosip.print.prependThumbprint:false}")
 	private boolean isThumbprint;
 
 	public String decrypt(String data) throws Exception {
