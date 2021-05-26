@@ -129,7 +129,6 @@ jobs:
 
   docker-print:
     needs: build
-
     runs-on: ubuntu-latest
     env:
       NAMESPACE: ${{ secrets.dev_namespace_docker_hub }}
