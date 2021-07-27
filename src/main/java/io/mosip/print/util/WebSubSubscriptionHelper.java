@@ -60,6 +60,8 @@ public class WebSubSubscriptionHelper {
 			subscriptionRequest.setHubURL(webSubHubUrl + "/hub");
 			subscriptionRequest.setSecret(webSubSecret);
 			subscriptionRequest.setTopic(topic);
+			LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
+					"subscription request : " + subscriptionRequest);
 			sb.subscribe(subscriptionRequest);
 		} catch (WebSubClientException e) {
 			LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
