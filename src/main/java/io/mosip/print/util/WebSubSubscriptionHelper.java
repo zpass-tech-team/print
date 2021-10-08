@@ -57,7 +57,7 @@ public class WebSubSubscriptionHelper {
 		try {
 			SubscriptionChangeRequest subscriptionRequest = new SubscriptionChangeRequest();
 			subscriptionRequest.setCallbackURL(callBackUrl);
-			subscriptionRequest.setHubURL(webSubHubUrl + "/hub");
+			subscriptionRequest.setHubURL(webSubHubUrl);
 			subscriptionRequest.setSecret(webSubSecret);
 			subscriptionRequest.setTopic(topic);
 			LOGGER.info("subscription request : {}", subscriptionRequest);
@@ -72,7 +72,7 @@ public class WebSubSubscriptionHelper {
 		try {
 		HttpHeaders headers = new HttpHeaders();
 		pb.publishUpdate(topic, credentialStatusEvent, MediaType.APPLICATION_JSON_UTF8_VALUE, headers,
-				webSubHubUrl + "/publish");
+				webSubHubUrl);
 	} catch (WebSubClientException e) {
 		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
 				"websub publish update error");
@@ -82,7 +82,7 @@ public class WebSubSubscriptionHelper {
 	@Cacheable(value = "topics", key = "{#topic}")
 	public void registerTopic(String topic) {
 		try {
-			pb.registerTopic(topic, webSubHubUrl + "/publish");
+			pb.registerTopic(topic, webSubHubUrl);
 		} catch (WebSubClientException e) {
 			LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
 					"topic already registered");
