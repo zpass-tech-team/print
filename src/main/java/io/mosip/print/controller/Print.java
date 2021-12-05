@@ -62,6 +62,7 @@ public class Print {
 				eventModel.getEvent().getTransactionId(),
 				getSignature(sign, credential), "UIN", false)
 				.get("uinPdf");
+		System.out.println("**********************************" + credential);
 		InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(pdfbytes));
 		/*
 		 * File pdfFile = new File(
