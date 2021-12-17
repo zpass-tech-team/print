@@ -2,6 +2,7 @@ package io.mosip.print.util;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import io.mosip.kernel.websub.api.model.UnsubscriptionRequest;
 import io.mosip.print.constant.LoggerFileConstant;
 import io.mosip.print.logger.PrintLogger;
 import io.mosip.print.model.CredentialStatusEvent;
+import org.springframework.web.client.RestTemplate;
 
 @Component
 public class WebSubSubscriptionHelper {
@@ -38,6 +40,10 @@ public class WebSubSubscriptionHelper {
 
 	@Autowired
 	private PublisherClient<String, CredentialStatusEvent, HttpHeaders> pb;
+
+	@Autowired
+	@Qualifier("selfTokenRestTemplate")
+	private RestTemplate restTemplate;
 
 	/** The Constant BIOMETRICS. */
 	private static final String WEBSUBSUBSCRIPTIONHEPLER = "WebSubSubscriptionHelper";
