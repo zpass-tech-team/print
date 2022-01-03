@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.websub.spi.PublisherClient;
@@ -19,6 +20,8 @@ import io.mosip.print.constant.LoggerFileConstant;
 import io.mosip.print.logger.PrintLogger;
 import io.mosip.print.model.CredentialStatusEvent;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.PostConstruct;
 
 @Component
 public class WebSubSubscriptionHelper {
@@ -52,6 +55,12 @@ public class WebSubSubscriptionHelper {
 	private static final String INITSUBSCRIPTION = "initSubsriptions";
 
 	private Logger LOGGER = PrintLogger.getLogger(WebSubSubscriptionHelper.class);
+
+	@Scheduled(fixedDelayString = "${print-websub-resubscription-delay-millisecs}",
+			initialDelayString = "${mosip.event.delay-millisecs}")
+	public void subscribeTopics() {
+		initSubsriptions();
+	}
 
 	public void initSubsriptions() {
 		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
