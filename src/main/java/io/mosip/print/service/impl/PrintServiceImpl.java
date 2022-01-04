@@ -893,7 +893,6 @@ public class PrintServiceImpl implements PrintService{
 		creEvent.setPublisher("PRINT_SERVICE");
 		creEvent.setTopic(topic);
 		creEvent.setEvent(sEvent);
-		webSubSubscriptionHelper.registerTopic(topic);
 		webSubSubscriptionHelper.printStatusUpdateEvent(topic, creEvent);
 	}
 
