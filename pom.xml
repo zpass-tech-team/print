@@ -50,58 +50,25 @@
 		<bouncycastle.version>1.66</bouncycastle.version>
 		<jwt.version> 3.8.1</jwt.version>
 		<google.zxing.version>3.3.3</google.zxing.version>
-
-
 	</properties>
 
 	<dependencies>
-		<!--  <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-		</dependency>-->
-		<!--  <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>-->
-		<!-- <dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-core</artifactId>
-			<version>1.2.0-rc2-SNAPSHOT</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>io.mosip.kernel</groupId>
-					<artifactId>kernel-parent</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-security</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<version>2.0.2.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.datatype</groupId>
+					<artifactId>jackson-datatype-jdk8</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-starter-actuator</artifactId>
-   		 </dependency>
 		<dependency>
 		    <groupId>org.springframework.cloud</groupId>
 		    <artifactId>spring-cloud-starter-config</artifactId>
 		    <version>2.0.2.RELEASE</version>
 		</dependency>
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
-        </dependency>
-	<!--  	<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -144,23 +111,9 @@
 			<version>1.7.25</version>
 		</dependency>
 		<dependency>
-			<groupId>net.logstash.logback</groupId>
-			<artifactId>logstash-logback-encoder</artifactId>
-			<version>6.4</version>
-		</dependency>
-		<dependency>
 		    <groupId>joda-time</groupId>
 		    <artifactId>joda-time</artifactId>
 		    <version>2.8.1</version><!--$NO-MVN-MAN-VER$-->
-		</dependency>
-		<dependency>
-		    <groupId>com.googlecode.json-simple</groupId>
-		    <artifactId>json-simple</artifactId>
-		    <version>1.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
@@ -213,16 +166,6 @@
 			<artifactId>jaxb-runtime</artifactId>
 			<version>2.3.0-b170127.1453</version>
 		</dependency>
-		 <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext7-core</artifactId>
@@ -255,11 +198,6 @@
 		   <version>4.5.8</version>
 		</dependency>
 		<dependency>
-			<groupId>com.auth0</groupId>
-			<artifactId>java-jwt</artifactId>
-			<version>${jwt.version}</version>
-		</dependency>
-		<dependency>
 		    <groupId>org.mockito</groupId>
 		    <artifactId>mockito-core</artifactId>
 		    <version>2.22.0</version>
@@ -269,6 +207,27 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-websubclient-api</artifactId>
 			<version>${kernel.websub.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.12.0</version>
 		</dependency>
 	</dependencies>
 	

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.websub.spi.PublisherClient;
@@ -19,6 +20,8 @@ import io.mosip.print.constant.LoggerFileConstant;
 import io.mosip.print.logger.PrintLogger;
 import io.mosip.print.model.CredentialStatusEvent;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.PostConstruct;
 
 @Component
 public class WebSubSubscriptionHelper {
@@ -42,7 +45,6 @@ public class WebSubSubscriptionHelper {
 	private PublisherClient<String, CredentialStatusEvent, HttpHeaders> pb;
 
 	@Autowired
-	@Qualifier("selfTokenRestTemplate")
 	private RestTemplate restTemplate;
 
 	/** The Constant BIOMETRICS. */
@@ -53,6 +55,9 @@ public class WebSubSubscriptionHelper {
 
 	private Logger LOGGER = PrintLogger.getLogger(WebSubSubscriptionHelper.class);
 
+
+	@Scheduled(fixedDelayString = "${print-websub-resubscription-delay-millisecs}",
+			initialDelayString = "${mosip.event.delay-millisecs}")
 	public void initSubsriptions() {
 		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
 				"Initializing subscribptions..");
@@ -79,13 +84,14 @@ public class WebSubSubscriptionHelper {
 		HttpHeaders headers = new HttpHeaders();
 		pb.publishUpdate(topic, credentialStatusEvent, MediaType.APPLICATION_JSON_UTF8_VALUE, headers,
 				webSubHubUrl);
-	} catch (WebSubClientException e) {
-		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
-				"websub publish update error");
+		} catch (WebSubClientException e) {
+			LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
+					"websub publish update error");
+		}
 	}
 
-	}
-	@Cacheable(value = "topics", key = "{#topic}")
+
+	/*@Cacheable(value = "topics", key = "{#topic}")
 	public void registerTopic(String topic) {
 		try {
 			pb.registerTopic(topic, webSubHubUrl);
@@ -94,5 +100,5 @@ public class WebSubSubscriptionHelper {
 					"topic already registered");
 		}
 
-	}
+	}*/
 }
