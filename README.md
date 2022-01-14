@@ -3,7 +3,7 @@
 ## Overview
 A reference implementation to print `euin`, `reprint`, `qrcode` [card types](https://github.com/mosip/id-repository/tree/1.2.0-rc2/id-repository/credential-service) in PDF format.
 
-![]()
+![](docs/print-service.png)
 
 1.
 1.
