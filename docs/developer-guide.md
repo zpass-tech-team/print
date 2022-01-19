@@ -1,8 +1,6 @@
-# Print Service  - Local Setup
+# Print Service Developer Guide
 
-Print Service used to print UIN card from Encrypted data which is shared by Hub.
-
-## Requirement
+## Pre-requisites
 Following tools required to run the print service locally.
 
 ###Ngrok
@@ -14,11 +12,17 @@ we are using ngrok to expose local port to remote to communicate with websub
 A reference project to use mosip credential service over websub and print a digital card. [print repo](https://github.com/mosip/print)
 
 
+## Build
+
+## Run
+
 ## Configuration
 
 Refer to the [configuration guide](/docs/configuration.md)
 
 ##Run 
+
+### Config server run
 
 As a developer, to run a service jar individually:
     ```
