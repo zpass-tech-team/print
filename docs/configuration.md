@@ -14,16 +14,16 @@ identity-mapping.json
 The above files are located in [mosip-config](https://github.com/mosip/mosip-config/blob/develop3-v3/) repo
 
 ## Template
-The template used for printing is present in the master data. You can alter that for any look and feel change. Key name in master data for template.
-```
-RPR_UIN_CARD_TEMPLATE
+The HTML template `RPR_UIN_CARD_TEMPLATE` used for printing is present in the master data. You can alter the same for any look and feel change. Key name in master data for template.  The template located in `template` table of `mosip_master` DB.
+
+Specify the language of the template in the following property
 ```
 mosip.template-language=eng
+```
 
-To understand the PDF implementation better you can look at the PrintServiceImpl.java file. 
+Refer to [PrintServiceImpl.java](../src/main/java/io/mosip/print/service/impl/PrintServiceImpl.java) to understand the PDF implementation.
 
-## websub
-
+## Websub
 websub configuration, websub is used to communicate with other services through event.
 
 Set the following properties to setup the service in your environment.
@@ -37,9 +37,9 @@ print-websub-resubscription-delay-millisecs = // resubscription delay time.
 mosip.event.secret = //secret key 
 ```
 
-## datashare
+## Datashare
 
-datashare configuration, datashare is used in print-service to stored pdf bytes and shared that link throguh websub.
+Datashare configuration, datashare is used in print-service to stored pdf bytes and shared that link throguh websub.
 
 ```
 mosip.datashare.partner.id = /your partner id from partner portal

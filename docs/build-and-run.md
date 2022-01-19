@@ -1,4 +1,4 @@
-# Print Service Developer Guide
+# Print Service Build and Run Guide
 
 ## Pre-requisites
 Following tools required to run the print service locally.
@@ -35,4 +35,5 @@ As a developer, to run a service jar individually:
 	
 	\* Refer to [kernel-config-server](https://github.com/mosip/commons/tree/master/kernel/kernel-config-server) for details
 
+## Docker
 
