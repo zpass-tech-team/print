@@ -20,8 +20,8 @@ The deploy print service in production follow the given steps:
 
 1. Onboard your organisation as [Credential Partner](https://nayakrounak.gitbook.io/mosip-docs/partners#credential-partner-cp)
 1. Place your `.p12` file in `../src/main/resources` folder.
-1. Set configuration as in given [here](configuation.md)
-1. Build and run as given [here](build-and-run.md)
+1. Set configuration as in given [here](docs/configuation.md)
+1. Build and run as given [here](docs/build-and-run.md)
 
 ## Configuration
 Refer to the [configuration guide](/docs/configuration.md)
