@@ -28,14 +28,7 @@ The project requires JDK 1.11.
     $ docker build -f Dockerfile
     ```
 
-The print project is a spring boot service. The project has sample card printed as a PDF. 
-
-Set the following properties to setup the service in your environment.
-```
-mosip.event.hubURL = //Websub url
-mosip.partner.id = //your partner id from partner portal
-mosip.event.callBackUrl = //call back url for websub so upon a credential issued event the websub will call this url. eg: https://dev.mosip.net/v1/print/print/callback/notifyPrint
-```
+The print project is a spring boot service. The project has sample card printed as a PDF. [Run guide](/docs/getStartedWithPrint.md)
     
 ## Deploy
 To deploy Print service on Kubernetes cluster using Dockers refer to [mosip-infra](https://github.com/mosip/mosip-infra/tree/1.2.0_v3/deployment/v3)
