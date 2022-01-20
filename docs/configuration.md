@@ -24,7 +24,8 @@ mosip.template-language=eng
 Refer to [PrintServiceImpl.java](../src/main/java/io/mosip/print/service/impl/PrintServiceImpl.java) to understand the PDF implementation.
 
 ## Websub
-websub configuration, websub is used to communicate with other services through event.
+
+Websub is used to communicate with Print service through event. [websub](https://github.com/mosip/websub/blob/1.2.0-rc2/README.md)
 
 Set the following properties to setup the service in your environment.
 ```
@@ -39,7 +40,7 @@ mosip.event.secret = //secret key
 
 ## Datashare
 
-Datashare configuration, datashare is used in print-service to stored pdf bytes and shared that link throguh websub.
+Datashare is used in print-service to stored pdf bytes and shared that link throguh websub. [Datashare](https://github.com/mosip/durian/blob/1.2.0-rc2/data-share/README.md)
 
 ```
 mosip.datashare.partner.id = /your partner id from partner portal
