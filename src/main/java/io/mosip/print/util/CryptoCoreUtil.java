@@ -31,12 +31,17 @@ import javax.crypto.spec.OAEPParameterSpec;
 import javax.crypto.spec.PSource.PSpecified;
 import javax.crypto.spec.SecretKeySpec;
 
+import io.mosip.print.constant.LoggerFileConstant;
+import io.mosip.print.exception.ExceptionUtils;
+import io.mosip.print.logger.PrintLogger;
+import io.mosip.print.service.impl.PrintServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.encodings.OAEPEncoding;
 import org.bouncycastle.crypto.engines.RSAEngine;
 import org.bouncycastle.crypto.params.RSAKeyParameters;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +51,8 @@ import io.mosip.print.exception.PlatformErrorMessages;
 
 @Component
 public class CryptoCoreUtil {
+
+	static Logger printLogger = PrintLogger.getLogger(CryptoCoreUtil.class);
 
 	private final static String RSA_ECB_OAEP_PADDING = "RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING";
 
@@ -57,25 +64,34 @@ public class CryptoCoreUtil {
 	@Value("${mosip.print.prependThumbprint:true}")
 	private boolean isThumbprint;
 
-	public String decrypt(String data) throws Exception {
-		PrivateKeyEntry privateKeyEntry = loadP12();
-		byte[] dataBytes = org.apache.commons.codec.binary.Base64.decodeBase64(data);
-		byte[] data1 = decryptData(dataBytes, privateKeyEntry);
-		String decryptedData = new String(data1);
+	public String decrypt(String data) {
+		String decryptedData=null;
+		try {
+			PrivateKeyEntry privateKeyEntry = loadP12();
+			byte[] dataBytes = org.apache.commons.codec.binary.Base64.decodeBase64(data);
+			byte[] data1 = decryptData(dataBytes, privateKeyEntry);
+			decryptedData = new String(data1);
+		}catch (Exception e){
+			printLogger.error( "Not able to decrypt the data" + ExceptionUtils.getStackTrace(e));
+		}
 		return decryptedData;
 	}
 
-	public PrivateKeyEntry loadP12() throws KeyStoreException, NoSuchAlgorithmException, CertificateException,
-			IOException, UnrecoverableEntryException {
-		KeyStore mosipKeyStore = KeyStore.getInstance("PKCS12");
-		InputStream in = getClass().getClassLoader().getResourceAsStream("partner.p12");
-		mosipKeyStore.load(in, "password@123".toCharArray());
-		ProtectionParameter password = new PasswordProtection("password@123".toCharArray());
-		PrivateKeyEntry privateKeyEntry = (PrivateKeyEntry) mosipKeyStore.getEntry("partner", password);
+	public PrivateKeyEntry loadP12(){
+		PrivateKeyEntry privateKeyEntry = null;
+		try {
+			KeyStore mosipKeyStore = KeyStore.getInstance("PKCS12");
+			InputStream in = getClass().getClassLoader().getResourceAsStream("partner.p12");
+			mosipKeyStore.load(in, "password@123".toCharArray());
+			ProtectionParameter password = new PasswordProtection("password@123".toCharArray());
+			privateKeyEntry = (PrivateKeyEntry) mosipKeyStore.getEntry("partner", password);
+		}catch (UnrecoverableEntryException | CertificateException | KeyStoreException | IOException|NoSuchAlgorithmException e) {
+			printLogger.error( "Not able to decrypt the data" + ExceptionUtils.getStackTrace(e));
+		}
 		return privateKeyEntry;
 	}
 
-	public byte[] decryptData(byte[] requestData, PrivateKeyEntry privateKey) throws Exception {
+	public byte[] decryptData(byte[] requestData, PrivateKeyEntry privateKey)  {
 		String keySplitter = "#KEY_SPLITTER#";
 		SecretKey symmetricKey = null;
 		byte[] encryptedData = null;
@@ -112,9 +128,9 @@ public class CryptoCoreUtil {
 				return symmetricDecrypt(symmetricKey, encryptedData, null);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			printLogger.error( "Not able to decrypt the data" + ExceptionUtils.getStackTrace(e));
 		}
-		throw new Exception("Not able to decrypt the data.");
+		return null;
 	}
 
 	public byte[] parseEncryptKeyHeader(byte[] encryptedKey) {
@@ -166,6 +182,8 @@ public class CryptoCoreUtil {
 			cipher.init(Cipher.DECRYPT_MODE, privateKey, oaepParams);
 			return cipher.doFinal(data);
 		} catch (java.security.NoSuchAlgorithmException e) {
+			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+					"", "Not able to decrypt the data" + ExceptionUtils.getStackTrace(e));
 			throw new NoSuchAlgorithmException(e);
 		} catch (NoSuchPaddingException e) {
 			throw new NoSuchPaddingException(e.getMessage());
@@ -179,7 +197,6 @@ public class CryptoCoreUtil {
 	/**
 	 *
 	 * @param paddedPlainText
-	 * @param privateKey
 	 * @return
 	 * @throws InvalidCipherTextException
 	 * @throws InvalidKeyException
@@ -229,22 +246,41 @@ public class CryptoCoreUtil {
 			}
 			output = cipher.doFinal(data, 0, data.length);
 		} catch (InvalidAlgorithmParameterException e) {
+			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getCode(),
+					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getMessage() + ExceptionUtils.getStackTrace(e));
 			throw new InvalidParamSpecException(PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getCode(),
 					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getMessage(), e);
 		} catch (IllegalBlockSizeException e) {
-			throw new CryptoManagerException(PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
-					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage(), e);
+			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getCode(),
+					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getMessage() + ExceptionUtils.getStackTrace(e));
+			throw new CryptoManagerException(PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getCode(),
+					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getMessage(), e);
 
 		} catch (BadPaddingException e) {
+			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
+					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage() + ExceptionUtils.getStackTrace(e));
 			throw new CryptoManagerException(PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
 					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage(), e);
 		} catch (NoSuchAlgorithmException e) {
+			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
+					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage() + ExceptionUtils.getStackTrace(e));
+
 			throw new CryptoManagerException(PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
 					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage(), e);
 		} catch (NoSuchPaddingException e) {
+			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
+					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage() + ExceptionUtils.getStackTrace(e));
 			throw new CryptoManagerException(PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
 					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage(), e);
 		} catch (InvalidKeyException e) {
+			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getCode(),
+					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getMessage() + ExceptionUtils.getStackTrace(e));
 			throw new CryptoManagerException(PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getCode(),
 					PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getMessage(), e);
 		}
@@ -255,7 +291,9 @@ public class CryptoCoreUtil {
 		try {
 			return DigestUtils.sha256(cert.getEncoded());
 		} catch (java.security.cert.CertificateEncodingException e) {
-
+			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
+					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage() + ExceptionUtils.getStackTrace(e));
 			throw new CryptoManagerException(PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getCode(),
 					PlatformErrorMessages.CERTIFICATE_THUMBPRINT_ERROR.getMessage(), e);
 		}

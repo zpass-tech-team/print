@@ -1,6 +1,7 @@
 package io.mosip.print.util;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -63,6 +64,8 @@ public class Utilities {
 	@Autowired
 	private ObjectMapper objMapper;
 
+	@Autowired
+	private RestApiClient restApiClient;
 
 	/** The rest client service. */
 	@Autowired
@@ -90,6 +93,11 @@ public class Utilities {
 
 	private String mappingJsonString = null;
 
+	private String identityMappingJsonString = null;
+
+	private String printTextFileJsonString = null;
+
+
 	/**
 	 * Gets the json.
 	 *
@@ -99,9 +107,26 @@ public class Utilities {
 	 *            the uri
 	 * @return the json
 	 */
-	public static String getJson(String configServerFileStorageURL, String uri) {
-		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate.getForObject(configServerFileStorageURL + uri, String.class);
+	public String getJson(String configServerFileStorageURL, String uri) {
+		String json = null;
+		try {
+			json=restApiClient.getApi(URI.create(configServerFileStorageURL + uri), String.class);
+		} catch (Exception e) {
+			printLogger.error(ExceptionUtils.getStackTrace(e));
+		}
+		return json;
+	}
+
+	public String getPrintTextFileJson(String configServerFileStorageURL, String uri) {
+		printTextFileJsonString = (printTextFileJsonString != null && !printTextFileJsonString.isEmpty()) ?
+				printTextFileJsonString : getJson(configServerFileStorageURL, uri);
+		return printTextFileJsonString;
+	}
+
+	public String getIdentityMappingJson(String configServerFileStorageURL, String uri) {
+		identityMappingJsonString = (identityMappingJsonString != null && !identityMappingJsonString.isEmpty()) ?
+				identityMappingJsonString : getJson(configServerFileStorageURL, uri);
+		return identityMappingJsonString;
 	}
 
 
@@ -168,7 +193,7 @@ public class Utilities {
 				"Utilities::getRegistrationProcessorMappingJson()::entry");
 
 		mappingJsonString = (mappingJsonString != null && !mappingJsonString.isEmpty()) ?
-				mappingJsonString : Utilities.getJson(configServerFileStorageURL, getRegProcessorIdentityJson);
+				mappingJsonString : getJson(configServerFileStorageURL, getRegProcessorIdentityJson);
 		ObjectMapper mapIdentityJsonStringToObject = new ObjectMapper();
 		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
 				"Utilities::getRegistrationProcessorMappingJson()::exit");
