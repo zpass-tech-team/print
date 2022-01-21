@@ -5,12 +5,12 @@ A reference implementation to print `euin`, `reprint`, `qrcode` [card types](htt
 
 ![](docs/print-service.png)
 
-1. Websub will delivered event to print-service.  
-2. Print will getting template from masterdata-service.
-3. After printing PDF card print-service will upload card to Datashare. 
-4. Print-service publish event to websub with updated status and Datashare link.
+1. Receives events from WebSub.
+2. Fetches templates from Masterdata.
+3. After creating PDF card print service upload the same to [Datashare](https://nayakrounak.gitbook.io/mosip-docs/modules/data-share). 
+4. Publishes event to WebSub with updated status and Datashare link.
 
-The card data in JSON format is publised as Websub event.  The print service consumes the data from event, decrypts using partner private key and converts into PDF using a predefined [template](docs/configuration.md#template)
+The card data in JSON format is publised as WebSub event.  The print service consumes the data from event, decrypts using partner private key and converts into PDF using a predefined [template](docs/configuration.md#template)
 
 ## Build and run (for developers)
 Refer [Build and Run](docs/build-and-run.md)

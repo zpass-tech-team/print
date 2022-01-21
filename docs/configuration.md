@@ -23,32 +23,23 @@ mosip.template-language=eng
 
 Refer to [PrintServiceImpl.java](../src/main/java/io/mosip/print/service/impl/PrintServiceImpl.java) to understand the PDF implementation.
 
-## Websub
-
-Websub is used to communicate with Print service through event. [websub](https://github.com/mosip/websub/blob/1.2.0-rc2/README.md)
-
-Set the following properties to setup the service in your environment.
+## WebSub
 ```
-mosip.event.hubURL = //Websub url
+mosip.event.hubURL = //WebSub url
 mosip.partner.id = //your partner id from partner portal
-mosip.event.callBackUrl = //call back url for websub so upon a credential issued event the websub will call this url. eg: https://dev.mosip.net/v1/print/print/callback/notifyPrint
+mosip.event.callBackUrl = //call back url for WebSub so upon a credential issued event the WebSub will call this url. eg: https://dev.mosip.net/v1/print/print/callback/notifyPrint
 mosip.event.topic = // event topic
 mosip.event.delay-millisecs = // subscription delay time. 
-print-websub-resubscription-delay-millisecs = // resubscription delay time.
+print-WebSub-resubscription-delay-millisecs = // resubscription delay time.
 mosip.event.secret = //secret key 
 ```
 
 ## Datashare
-
-Datashare is used in print-service to stored pdf bytes and shared that link throguh websub. [Datashare](https://github.com/mosip/durian/blob/1.2.0-rc2/data-share/README.md)
-
 ```
 mosip.datashare.partner.id = /your partner id from partner portal
 mosip.datashare.policy.id = /your policy id from partner portal
 CREATEDATASHARE = //datashare url 
-
 ```
-
 
 
 
