@@ -51,8 +51,7 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 	@Override
 	public Object getApi(ApiName apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
 			Class<?> responseType) throws ApisResourceAccessException {
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::getApi()::entry");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::getApi()::entry");
 		Object obj = null;
 		String apiHostIpPort = env.getProperty(apiName.name());
 
@@ -83,30 +82,25 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 			try {
 
 				uriComponents = builder.build(false).encode();
-				printLogger.debug(uriComponents.toUri().toString(), "URI", "", "");
+				printLogger.debug(uriComponents.toUri().toString()+ "URI");
 				obj = restApiClient.getApi(uriComponents.toUri(), responseType);
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				printLogger.error(LoggerFileConstant.SESSIONID.toString(),
-						LoggerFileConstant.REGISTRATIONID.toString(), "",
-						e.getMessage() + ExceptionUtils.getStackTrace(e));
-
+				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
 				throw new ApisResourceAccessException(
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getCode(), e);
 
 			}
 		}
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::getApi()::exit");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::getApi()::exit");
 		return obj;
 	}
 
 	@Override
 	public Object getApi(ApiName apiName, List<String> pathsegments, List<String> queryParamName, List<Object> queryParamValue,
 						 Class<?> responseType) throws ApisResourceAccessException {
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::getApi()::entry");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::getApi()::entry");
 		Object obj = null;
 		String apiHostIpPort = env.getProperty(apiName.name());
 
@@ -134,29 +128,25 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 			try {
 
 				uriComponents = builder.build(false).encode();
-				printLogger.debug(uriComponents.toUri().toString(), "URI", "", "");
+				printLogger.debug(uriComponents.toUri().toString()+"URI");
 				obj = restApiClient.getApi(uriComponents.toUri(), responseType);
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				printLogger.error(LoggerFileConstant.SESSIONID.toString(),
-						LoggerFileConstant.REGISTRATIONID.toString(), "",
-						e.getMessage() + ExceptionUtils.getStackTrace(e));
+				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
 
 				throw new ApisResourceAccessException(
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getCode(), e);
 
 			}
 		}
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::getApi()::exit");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::getApi()::exit");
 		return obj;
 	}
 
 	public Object postApi(ApiName apiName, String queryParamName, String queryParamValue, Object requestedData,
 			Class<?> responseType, MediaType mediaType) throws ApisResourceAccessException {
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::postApi()::entry");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::postApi()::entry");
 
 		Object obj = null;
 		String apiHostIpPort = env.getProperty(apiName.name());
@@ -178,17 +168,14 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 				obj = restApiClient.postApi(builder.toUriString(), mediaType, requestedData, responseType);
 
 			} catch (Exception e) {
-				printLogger.error(LoggerFileConstant.SESSIONID.toString(),
-						LoggerFileConstant.REGISTRATIONID.toString(), "",
-						e.getMessage() + ExceptionUtils.getStackTrace(e));
+				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
 
 				throw new ApisResourceAccessException(
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getMessage(), e);
 
 			}
 		}
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::postApi()::exit");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::postApi()::exit");
 		return obj;
 	}
 
@@ -219,8 +206,7 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 	public Object postApi(ApiName apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
 			Object requestedData, Class<?> responseType) throws ApisResourceAccessException {
 
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::postApi()::entry");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::postApi()::entry");
 		Object obj = null;
 		String apiHostIpPort = env.getProperty(apiName.name());
 		UriComponentsBuilder builder = null;
@@ -249,17 +235,14 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 				obj = restApiClient.postApi(builder.toUriString(), null, requestedData, responseType);
 
 			} catch (Exception e) {
-				printLogger.error(LoggerFileConstant.SESSIONID.toString(),
-						LoggerFileConstant.REGISTRATIONID.toString(), "",
-						e.getMessage() + ExceptionUtils.getStackTrace(e));
+				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
 
 				throw new ApisResourceAccessException(
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getMessage(), e);
 
 			}
 		}
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::postApi()::exit");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::postApi()::exit");
 		return obj;
 	}
 
@@ -267,8 +250,7 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 	public Object postApi(ApiName apiName, MediaType mediaType, List<String> pathsegments, List<String> queryParamName, List<Object> queryParamValue,
 						  Object requestedData, Class<?> responseType) throws ApisResourceAccessException {
 
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::postApi()::entry");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::postApi()::entry");
 		Object obj = null;
 		String apiHostIpPort = env.getProperty(apiName.name());
 		UriComponentsBuilder builder = null;
@@ -295,128 +277,18 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 				obj = restApiClient.postApi(builder.toUriString(), mediaType, requestedData, responseType);
 
 			} catch (Exception e) {
-				printLogger.error(LoggerFileConstant.SESSIONID.toString(),
-						LoggerFileConstant.REGISTRATIONID.toString(), "",
-						e.getMessage() + ExceptionUtils.getStackTrace(e));
+				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
 
 				throw new ApisResourceAccessException(
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getMessage(), e);
 
 			}
 		}
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::postApi()::exit");
+		printLogger.debug("RegistrationProcessorRestClientServiceImpl::postApi()::exit");
 		return obj;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see io.mosip.registration.processor.core.spi.restclient.
-	 * RegistrationProcessorRestClientService#patchApi(io.mosip.registration.
-	 * processor.core.code.ApiName, java.util.List, java.lang.String,
-	 * java.lang.String, java.lang.Object, java.lang.Class)
-	 */
-	public Object patchApi(ApiName apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
-			Object requestedData, Class<?> responseType) throws ApisResourceAccessException {
 
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::postApi()::entry");
-		Object obj = null;
-		String apiHostIpPort = env.getProperty(apiName.name());
-		UriComponentsBuilder builder = null;
-		if (apiHostIpPort != null)
-			builder = UriComponentsBuilder.fromUriString(apiHostIpPort);
-		if (builder != null) {
-
-			if (!((pathsegments == null) || (pathsegments.isEmpty()))) {
-				for (String segment : pathsegments) {
-					if (!((segment == null) || (("").equals(segment)))) {
-						builder.pathSegment(segment);
-					}
-				}
-
-			}
-			if (!checkNull(queryParamName)) {
-				String[] queryParamNameArr = queryParamName.split(",");
-				String[] queryParamValueArr = queryParamValue.split(",");
-
-				for (int i = 0; i < queryParamNameArr.length; i++) {
-					builder.queryParam(queryParamNameArr[i], queryParamValueArr[i]);
-				}
-			}
-
-			try {
-				obj = restApiClient.patchApi(builder.toUriString(), requestedData, responseType);
-
-			} catch (Exception e) {
-				printLogger.error(LoggerFileConstant.SESSIONID.toString(),
-						LoggerFileConstant.REGISTRATIONID.toString(), "",
-						e.getMessage() + ExceptionUtils.getStackTrace(e));
-
-				throw new ApisResourceAccessException(
-						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getMessage(), e);
-
-			}
-		}
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::postApi()::exit");
-		return obj;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.mosip.registration.processor.core.spi.restclient.
-	 * RegistrationProcessorRestClientService#putApi(io.mosip.registration.
-	 * processor.core.code.ApiName, java.util.List, java.lang.String,
-	 * java.lang.String, java.lang.Object, java.lang.Class)
-	 */
-	public Object putApi(ApiName apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
-			Object requestedData, Class<?> responseType, MediaType mediaType) throws ApisResourceAccessException {
-
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::putApi()::entry");
-		Object obj = null;
-		String apiHostIpPort = env.getProperty(apiName.name());
-		UriComponentsBuilder builder = null;
-		if (apiHostIpPort != null)
-			builder = UriComponentsBuilder.fromUriString(apiHostIpPort);
-		if (builder != null) {
-
-			if (!((pathsegments == null) || (pathsegments.isEmpty()))) {
-				for (String segment : pathsegments) {
-					if (!((segment == null) || (("").equals(segment)))) {
-						builder.pathSegment(segment);
-					}
-				}
-
-			}
-			if (!checkNull(queryParamName)) {
-				String[] queryParamNameArr = queryParamName.split(",");
-				String[] queryParamValueArr = queryParamValue.split(",");
-
-				for (int i = 0; i < queryParamNameArr.length; i++) {
-					builder.queryParam(queryParamNameArr[i], queryParamValueArr[i]);
-				}
-			}
-
-			try {
-				obj = restApiClient.putApi(builder.toUriString(), requestedData, responseType, mediaType);
-
-			} catch (Exception e) {
-				printLogger.error(LoggerFileConstant.SESSIONID.toString(),
-						LoggerFileConstant.REGISTRATIONID.toString(), "",
-						e.getMessage() + ExceptionUtils.getStackTrace(e));
-
-				throw new ApisResourceAccessException(
-						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getMessage(), e);
-			}
-		}
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"RegistrationProcessorRestClientServiceImpl::putApi()::exit");
-		return obj;
-	}
 
 	/**
 	 * Check null.

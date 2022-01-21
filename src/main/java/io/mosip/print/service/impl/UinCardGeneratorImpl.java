@@ -88,8 +88,7 @@ public class UinCardGeneratorImpl implements UinCardGenerator<byte[]> {
 	@Override
 	public byte[] generateUinCard(InputStream in, UinCardType type, String password)
 			throws ApisResourceAccessException {
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"UinCardGeneratorImpl::generateUinCard()::entry");
+		printLogger.debug("UinCardGeneratorImpl::generateUinCard()::entry");
         byte[] pdfSignatured=null;
 		ByteArrayOutputStream out = null;
 		try {
@@ -125,22 +124,18 @@ public class UinCardGeneratorImpl implements UinCardGenerator<byte[]> {
 			pdfSignatured = Base64.decodeBase64(signatureResponseDto.getData());
 
 		} catch (IOException | PDFGeneratorException e) {
-			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
-					"", PlatformErrorMessages.PRT_PRT_PDF_NOT_GENERATED.name() + e.getMessage()
+			printLogger.error( e.getMessage()
 							+ ExceptionUtils.getStackTrace(e));
 			throw new PDFGeneratorException(PDFGeneratorExceptionCodeConstant.PDF_EXCEPTION.getErrorCode(),
 					e.getMessage() + ExceptionUtils.getStackTrace(e));
 		} 
 			  catch (ApisResourceAccessException e) {
 					e.printStackTrace();
-					printLogger.error(LoggerFileConstant.SESSIONID.toString(),
-			 LoggerFileConstant.REGISTRATIONID.toString(), "",
-						PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.name() + e.getMessage()
+					printLogger.error(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.name() + e.getMessage()
 			 + ExceptionUtils.getStackTrace(e)); throw new PDFSignatureException(
 			 e.getMessage() + ExceptionUtils.getStackTrace(e)); }
 			 
-				printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"UinCardGeneratorImpl::generateUinCard()::exit");
+		 	printLogger.debug("UinCardGeneratorImpl::generateUinCard()::exit");
 
 		return pdfSignatured;
 	}

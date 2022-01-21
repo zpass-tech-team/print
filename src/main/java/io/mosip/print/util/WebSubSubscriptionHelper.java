@@ -59,8 +59,7 @@ public class WebSubSubscriptionHelper {
 	@Scheduled(fixedDelayString = "${print-websub-resubscription-delay-millisecs}",
 			initialDelayString = "${mosip.event.delay-millisecs}")
 	public void initSubsriptions() {
-		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
-				"Initializing subscribptions..");
+		LOGGER.info("Initializing subscribptions... {} {}", WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION);
 		subscribeForPrintServiceEvents();
 	}
 
@@ -74,8 +73,7 @@ public class WebSubSubscriptionHelper {
 			LOGGER.info("subscription request : {}", subscriptionRequest);
 			sb.subscribe(subscriptionRequest);
 		} catch (WebSubClientException e) {
-			LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
-					"websub subscription error");
+			LOGGER.info("websub subscription error {} {}", WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION);
 		}
 	}
 
@@ -85,8 +83,7 @@ public class WebSubSubscriptionHelper {
 		pb.publishUpdate(topic, credentialStatusEvent, MediaType.APPLICATION_JSON_UTF8_VALUE, headers,
 				webSubHubUrl);
 		} catch (WebSubClientException e) {
-			LOGGER.info(LoggerFileConstant.SESSIONID.toString(), WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION,
-					"websub publish update error");
+			LOGGER.info("websub publish update error {} {}", WEBSUBSUBSCRIPTIONHEPLER, INITSUBSCRIPTION);
 		}
 	}
 
