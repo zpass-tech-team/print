@@ -65,7 +65,7 @@ public class RestApiClient {
 			result = (T) restTemplate.exchange(uri, HttpMethod.GET, setRequestHeader(null, null), responseType)
 					.getBody();
 		} catch (Exception e) {
-			logger.error("RestApiClient::getApi()::error"+e.getMessage() + ExceptionUtils.getStackTrace(e));
+			logger.error("RestApiClient::getApi()::error {} {}",e.getMessage(),e);
 		}
 		return result;
 	}
@@ -75,7 +75,7 @@ public class RestApiClient {
 		try {
 			result = (T) restTemplate.getForObject(url, responseType);
 		} catch (Exception e) {
-			logger.error("RestApiClient::getApi()::error"+e.getMessage() + ExceptionUtils.getStackTrace(e));
+			logger.error("RestApiClient::getApi()::error {} {}",e.getMessage() ,e);
 		}
 		return result;
 	}
@@ -101,7 +101,7 @@ public class RestApiClient {
 			logger.info("RestApiClient::postApi()::entry uri : {}",uri);
 			result = (T) restTemplate.postForObject(uri, setRequestHeader(requestType, mediaType), responseClass);
 		} catch (Exception e) {
-			logger.error("RestApiClient::postApi()::error"+e.getMessage() + ExceptionUtils.getStackTrace(e));
+			logger.error("RestApiClient::postApi()::error {} {}"+e.getMessage(), e);
 		}
 		return result;
 	}

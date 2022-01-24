@@ -12,7 +12,7 @@ public interface PrintService {
 	 * @return
 	 * @throws Exception
 	 */
-	public byte[] generateCard(EventModel eventModel) throws Exception;
+	public boolean generateCard(EventModel eventModel) throws Exception;
 
 	// Map<String, byte[]> getDocuments(String credentialSubject, String sign,
 	// String cardType,
