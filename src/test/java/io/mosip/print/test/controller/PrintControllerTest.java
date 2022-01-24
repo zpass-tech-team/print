@@ -62,7 +62,7 @@ public class PrintControllerTest {
 	@Test
 	public void testHandleSubscribeEventSuccess() throws Exception {
 		byte[] pdfbytes = "pdf".getBytes();
-		Mockito.when(printService.generateCard(Mockito.any())).thenReturn(pdfbytes);
+		Mockito.when(printService.generateCard(Mockito.any())).thenReturn(true);
 		mockMvc.perform(MockMvcRequestBuilders.post("/print/callback/notifyPrint")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(reqCredentialEventJson.getBytes()))
 				.andExpect(status().isOk());

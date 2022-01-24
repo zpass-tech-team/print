@@ -45,7 +45,7 @@ public class Print {
 		printLogger.info("event recieved from websub"+", id: {}",eventModel.getEvent().getId());
 		boolean isPrinted = printService.generateCard(eventModel);
 		printLogger.info("printing status : {} for event id: {}",isPrinted,eventModel.getEvent().getId());
-		return new ResponseEntity<>("successfully printed", HttpStatus.OK);
+		return new ResponseEntity<>("request accepted.", HttpStatus.OK);
 	}
 
 }

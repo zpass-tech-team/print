@@ -64,6 +64,16 @@ public class CryptoCoreUtil {
 	@Value("${mosip.print.prependThumbprint:true}")
 	private boolean isThumbprint;
 
+	@Value("${mosip.print.crypto.p12.filename}")
+	private String fileName;
+
+	@Value("${mosip.print.crypto.p12.password}")
+	private String cyptoPassword;
+
+	@Value("${mosip.print.crypto.p12.alias}")
+	private String alias;
+
+
 	public String decrypt(String data) {
 		String decryptedData=null;
 		try {
@@ -81,10 +91,10 @@ public class CryptoCoreUtil {
 		PrivateKeyEntry privateKeyEntry = null;
 		try {
 			KeyStore mosipKeyStore = KeyStore.getInstance("PKCS12");
-			InputStream in = getClass().getClassLoader().getResourceAsStream("partner.p12");
+			InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
 			mosipKeyStore.load(in, "password@123".toCharArray());
-			ProtectionParameter password = new PasswordProtection("password@123".toCharArray());
-			privateKeyEntry = (PrivateKeyEntry) mosipKeyStore.getEntry("partner", password);
+			ProtectionParameter password = new PasswordProtection(cyptoPassword.toCharArray());
+			privateKeyEntry = (PrivateKeyEntry) mosipKeyStore.getEntry(alias, password);
 		}catch (UnrecoverableEntryException | CertificateException | KeyStoreException | IOException|NoSuchAlgorithmException e) {
 			printLogger.error( "Not able to decrypt the data : {}" ,e);
 		}
