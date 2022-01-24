@@ -238,7 +238,6 @@ public class PrintServiceImpl implements PrintService{
 			}
 			String ecryptionPin = eventModel.getEvent().getData().get("protectionKey").toString();
 			decodedCrdential = cryptoCoreUtil.decrypt(credential);
-			System.out.println(">>>>>>>>>>>>vrdsd>>>>>>>"+decodedCrdential.toString());
 			Map proofMap = new HashMap<String, String>();
 			proofMap = (Map) eventModel.getEvent().getData().get("proof");
 			String sign = proofMap.get("signature").toString();
