@@ -1,17 +1,14 @@
 /**
  * 
  */
-package io.mosip.print.util;
-
-import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayInputStream;
+package io.mosip.print.service.impl;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import java.io.ByteArrayInputStream;
 
 /**
  * @author M1049825
