@@ -82,12 +82,11 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 			try {
 
 				uriComponents = builder.build(false).encode();
-				printLogger.debug(uriComponents.toUri().toString()+ "URI");
+				printLogger.debug(uriComponents.toUri().toString(), "URI");
 				obj = restApiClient.getApi(uriComponents.toUri(), responseType);
 
 			} catch (Exception e) {
-				e.printStackTrace();
-				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
+				printLogger.error(e.getMessage() , e);
 				throw new ApisResourceAccessException(
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getCode(), e);
 
@@ -128,12 +127,11 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 			try {
 
 				uriComponents = builder.build(false).encode();
-				printLogger.debug(uriComponents.toUri().toString()+"URI");
+				printLogger.debug(uriComponents.toUri().toString(),"URI");
 				obj = restApiClient.getApi(uriComponents.toUri(), responseType);
 
 			} catch (Exception e) {
-				e.printStackTrace();
-				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
+				printLogger.error(e.getMessage() , e);
 
 				throw new ApisResourceAccessException(
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getCode(), e);
@@ -168,9 +166,9 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 				obj = restApiClient.postApi(builder.toUriString(), mediaType, requestedData, responseType);
 
 			} catch (Exception e) {
-				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
+				printLogger.error(e.getMessage() , e);
 
-				throw new ApisResourceAccessException(
+				throw new ApisResourceAccessException(PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getCode(),
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getMessage(), e);
 
 			}
@@ -235,9 +233,9 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 				obj = restApiClient.postApi(builder.toUriString(), null, requestedData, responseType);
 
 			} catch (Exception e) {
-				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
+				printLogger.error(e.getMessage() , e);
 
-				throw new ApisResourceAccessException(
+				throw new ApisResourceAccessException(PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getCode(),
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getMessage(), e);
 
 			}
@@ -277,9 +275,8 @@ public class PrintRestClientServiceImpl implements PrintRestClientService<Object
 				obj = restApiClient.postApi(builder.toUriString(), mediaType, requestedData, responseType);
 
 			} catch (Exception e) {
-				printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
-
-				throw new ApisResourceAccessException(
+				printLogger.error(e.getMessage() , e);
+				throw new ApisResourceAccessException(PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getCode(),
 						PlatformErrorMessages.PRT_RCT_UNKNOWN_RESOURCE_EXCEPTION.getMessage(), e);
 
 			}

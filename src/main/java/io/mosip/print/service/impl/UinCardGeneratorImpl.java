@@ -124,16 +124,14 @@ public class UinCardGeneratorImpl implements UinCardGenerator<byte[]> {
 			pdfSignatured = Base64.decodeBase64(signatureResponseDto.getData());
 
 		} catch (IOException | PDFGeneratorException e) {
-			printLogger.error( e.getMessage()
-							+ ExceptionUtils.getStackTrace(e));
+			printLogger.error( e.getMessage(),e);
 			throw new PDFGeneratorException(PDFGeneratorExceptionCodeConstant.PDF_EXCEPTION.getErrorCode(),
-					e.getMessage() + ExceptionUtils.getStackTrace(e));
+					PDFGeneratorExceptionCodeConstant.PDF_EXCEPTION.getErrorMessage() ,e);
 		} 
-			  catch (ApisResourceAccessException e) {
-					e.printStackTrace();
-					printLogger.error(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.name() + e.getMessage()
-			 + ExceptionUtils.getStackTrace(e)); throw new PDFSignatureException(
-			 e.getMessage() + ExceptionUtils.getStackTrace(e)); }
+		catch (ApisResourceAccessException e) {
+					printLogger.error(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.name() , e.getMessage()
+			 ,e);
+					throw new PDFSignatureException(e); }
 			 
 		 	printLogger.debug("UinCardGeneratorImpl::generateUinCard()::exit");
 

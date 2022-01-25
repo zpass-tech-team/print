@@ -222,11 +222,12 @@ public class PrintServiceImpl implements PrintService{
 	@Value("#{'${mosip.mandatory-languages:}'.concat('${mosip.optional-languages:}')}")
 	private String supportedLang;
 
-	public byte[] generateCard(EventModel eventModel) throws Exception {
+	public boolean generateCard(EventModel eventModel) {
 		Map<String, byte[]> byteMap = new HashMap<>();
 		byte[] pdfbytes=null;
 		String decodedCrdential = null;
 		String credential = null;
+		boolean isPrinted=false;
 		try {
 			if (eventModel.getEvent().getDataShareUri() == null || eventModel.getEvent().getDataShareUri().isEmpty()) {
 				credential = eventModel.getEvent().getData().get("credential").toString();
@@ -244,9 +245,10 @@ public class PrintServiceImpl implements PrintService{
 					eventModel.getEvent().getData().get("credentialType").toString(), ecryptionPin,
 					eventModel.getEvent().getTransactionId(), sign, "UIN", false).get("uinPdf");
 		}catch (Exception e){
-			printLogger.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
+			printLogger.error(e.getMessage() , e);
+			return isPrinted=false;
 		}
-		return pdfbytes;
+		return isPrinted=true;
 	}
 /*
 	private String getSignature(String sign, String crdential) {
@@ -335,7 +337,7 @@ public class PrintServiceImpl implements PrintService{
 		catch (QrcodeGenerationException e) {
 			description.setMessage(PlatformErrorMessages.PRT_PRT_QR_CODE_GENERATION_ERROR.getMessage());
 			description.setCode(PlatformErrorMessages.PRT_PRT_QR_CODE_GENERATION_ERROR.getCode());
-			printLogger.error(PlatformErrorMessages.PRT_PRT_QRCODE_NOT_GENERATED.name() + ExceptionUtils.getStackTrace(e));
+			printLogger.error(PlatformErrorMessages.PRT_PRT_QRCODE_NOT_GENERATED.name() , e);
 			throw new PDFGeneratorException(PDFGeneratorExceptionCodeConstant.PDF_EXCEPTION.getErrorCode(),
 					e.getErrorText());
 
@@ -344,7 +346,7 @@ public class PrintServiceImpl implements PrintService{
 			description.setCode(PlatformErrorMessages.PRT_PRT_UIN_NOT_FOUND_IN_DATABASE.getCode());
 
 			printLogger.error(
-					PlatformErrorMessages.PRT_PRT_UIN_NOT_FOUND_IN_DATABASE.name() + ExceptionUtils.getStackTrace(e));
+					PlatformErrorMessages.PRT_PRT_UIN_NOT_FOUND_IN_DATABASE.name() ,e);
 			throw new PDFGeneratorException(PDFGeneratorExceptionCodeConstant.PDF_EXCEPTION.getErrorCode(),
 					e.getErrorText());
 
@@ -352,14 +354,14 @@ public class PrintServiceImpl implements PrintService{
 			description.setMessage(PlatformErrorMessages.PRT_TEM_PROCESSING_FAILURE.getMessage());
 			description.setCode(PlatformErrorMessages.PRT_TEM_PROCESSING_FAILURE.getCode());
 
-			printLogger.error(PlatformErrorMessages.PRT_TEM_PROCESSING_FAILURE.name() + ExceptionUtils.getStackTrace(e));
+			printLogger.error(PlatformErrorMessages.PRT_TEM_PROCESSING_FAILURE.name() ,e);
 			throw new TemplateProcessingFailureException(PlatformErrorMessages.PRT_TEM_PROCESSING_FAILURE.getMessage());
 
 		} catch (PDFGeneratorException e) {
 			description.setMessage(PlatformErrorMessages.PRT_PRT_PDF_NOT_GENERATED.getMessage());
 			description.setCode(PlatformErrorMessages.PRT_PRT_PDF_NOT_GENERATED.getCode());
 
-			printLogger.error(PlatformErrorMessages.PRT_PRT_PDF_NOT_GENERATED.name() + ExceptionUtils.getStackTrace(e));
+			printLogger.error(PlatformErrorMessages.PRT_PRT_PDF_NOT_GENERATED.name() ,e);
 			throw new PDFGeneratorException(PDFGeneratorExceptionCodeConstant.PDF_EXCEPTION.getErrorCode(),
 					e.getErrorText());
 
@@ -367,15 +369,15 @@ public class PrintServiceImpl implements PrintService{
 			description.setMessage(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.getMessage());
 			description.setCode(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.getCode());
 
-			printLogger.error(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.name() + ExceptionUtils.getStackTrace(e));
+			printLogger.error(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.name() ,e);
 			throw new PDFSignatureException(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.getMessage());
 
 		} catch (Exception ex) {
 			description.setMessage(PlatformErrorMessages.PRT_PRT_PDF_GENERATION_FAILED.getMessage());
 			description.setCode(PlatformErrorMessages.PRT_PRT_PDF_GENERATION_FAILED.getCode());
-			printLogger.error(ex.getMessage() + ExceptionUtils.getStackTrace(ex));
+			printLogger.error(ex.getMessage() ,ex);
 			throw new PDFGeneratorException(PDFGeneratorExceptionCodeConstant.PDF_EXCEPTION.getErrorCode(),
-					ex.getMessage() + ExceptionUtils.getStackTrace(ex));
+					ex.getMessage() ,ex);
 
 		} finally {
 			String eventId = "";
@@ -641,8 +643,7 @@ public class PrintServiceImpl implements PrintService{
 			}
 
 		} catch (JsonParseException | JsonMappingException e) {
-			printLogger.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
-					null, "Error while parsing Json file" + ExceptionUtils.getStackTrace(e));
+			printLogger.error("Error while parsing Json file" ,e);
 			throw new ParsingException(PlatformErrorMessages.PRT_RGS_JSON_PARSING_EXCEPTION.getMessage(), e);
 		}
 	}
@@ -890,7 +891,7 @@ public class PrintServiceImpl implements PrintService{
 					cryptoWithPinResponseDto = cryptoUtil.decryptWithPin(cryptoWithPinRequestDto);
 				} catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException
 						| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
-					printLogger.error("Error while decrypting the data" + ExceptionUtils.getStackTrace(e));
+					printLogger.error("Error while decrypting the data" ,e);
 					throw new CryptoManagerException(PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getCode(),
 							PlatformErrorMessages.PRT_INVALID_KEY_EXCEPTION.getMessage(), e);
 				}

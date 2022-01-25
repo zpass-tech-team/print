@@ -34,4 +34,7 @@ public class PDFSignatureException extends BaseUncheckedException{
 		super(PlatformErrorMessages.PRT_PRT_PDF_SIGNATURE_EXCEPTION.getCode() + EMPTY_SPACE, message, cause);
 
 	}
+
+    public PDFSignatureException(Throwable cause) {
+    }
 }

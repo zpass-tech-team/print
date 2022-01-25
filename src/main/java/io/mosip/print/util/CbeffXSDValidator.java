@@ -18,11 +18,14 @@ import javax.xml.validation.Validator;
 public class CbeffXSDValidator {
 
 	public static boolean validateXML(byte[] xsdBytes, byte[] xmlBytes) throws Exception {
-		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		SchemaFactory factory = getSchemaFactory();
 		Schema schema = factory.newSchema(new StreamSource(new ByteArrayInputStream(xsdBytes)));
 		Validator validator = schema.newValidator();
 		validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
 		return true;
+	}
+	private static SchemaFactory getSchemaFactory(){
+		return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	}
 
 }

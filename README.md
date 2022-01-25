@@ -1,90 +1,33 @@
-# Print
-A reference project to use mosip credential service over websub and print a digital card.
+# Print Service
 
-## Build
-The project requires JDK 1.11. 
-1. To build jars:
-    ```
-    $ cd print
-    $ mvn clean install 
-    ```
-1. To skip JUnit tests and Java Docs:
-    ```
-    $ mvn install -DskipTests=true -Dmaven.javadoc.skip=true
-    ```
-1. To build Docker for a service:
-    ```
-    $ cd <service folder>
-    $ docker build -f Dockerfile
-    ```
+## Overview
+A reference implementation to print `euin`, `reprint`, `qrcode` [card types](https://github.com/mosip/id-repository/tree/1.2.0-rc2/id-repository/credential-service) in PDF format. This service is intended to be custimized and used by a card printing agency who need to onboard onto MOSIP as [Credential Partner]() before deploying the service.  
 
-## Deploy
+![](docs/print-service.png)
 
-### Print Service in sandbox
-To deploy Print on Kubernetes cluster using Dockers refer to [mosip-infra](https://github.com/mosip/mosip-infra/tree/1.2.0_v3/deployment/v3)
+1. Receives events from WebSub.
+2. Fetches templates from Masterdata.
+3. After creating PDF card print service upload the same to [Datashare](https://nayakrounak.gitbook.io/mosip-docs/modules/data-share). 
+4. Publishes event to WebSub with updated status and Datashare link.
 
-### Developer
+The card data in JSON format is publised as WebSub event.  The print service consumes the data from event, decrypts using partner private key and converts into PDF using a predefined [template](docs/configuration.md#template)
 
-1. As a developer, to run a service jar individually:
-    ```
-    `java -Dspring.profiles.active=<profile> -Dspring.cloud.config.uri=<config-url> -Dspring.cloud.config.label=<config-label> -jar <jar-name>.jar`
-    ```
-    Example:  
-        _profile_: `env` (extension used on configuration property files*)    
-        _config_label_: `master` (git branch of config repo*)  
-        _config-url_: `http://localhost:51000` (Url of the config server*)  
-	
-	\* Refer to [kernel-config-server](https://github.com/mosip/commons/tree/master/kernel/kernel-config-server) for details
-
-	
-2. Note that you will have to run the dependent services like kernel-config-server to run any service successfully.
+## Build and run (for developers)
+Refer [Build and Run](docs/build-and-run.md)
     
-## Dependencies
-print module depends on the following services:
-* print-service
-     * kernel-websubclient-api in Kernel module.
-     * Kernel-config-server in Kernel module.  
-     * Kernel-auth-adapter in Kernel module.
-     
-## Card type
-An overview of various card type:
- 
-* euin
-* reprint
-* qrcode
-     
+## Deploy
+The deploy print service in production follow the given steps:
+
+1. Onboard your organisation as [Credential Partner](https://nayakrounak.gitbook.io/mosip-docs/partners#credential-partner-cp)
+1. Place your `.p12` file in `../src/main/resources` folder.
+1. Set configuration as in given [here](docs/configuation.md)
+1. Build and run as given [here](docs/build-and-run.md)
 
 ## Configuration
-Refer to the [configuration guide](https://github.com/mosip/mosip-config/blob/develop/sandbox/print-mz.properties).
+Refer to the [configuration guide](/docs/configuration.md)
 
 ## Test
 Automated functaionl tests available in [Functional Tests repo](https://github.com/mosip/mosip-functional-tests)`
 
-## Get started
-The print project is a spring boot service. The project has sample card printed as a PDF. 
-
-Set the following properties to setup the service in your environment.
-```
-mosip.event.hubURL = //Websub url
-mosip.partner.id = //your partner id from partner portal
-mosip.event.callBackUrl = //call back url for websub so upon a credential issued event the websub will call this url. eg: https://dev.mosip.net/v1/print/print/callback/notifyPrint
-```
-
-Once done you are set to go.
-
-## Customizing. 
-As its a reference project you may need to customize this quite often.
-
-The v1/print/callback is the api that consumes the credential json. So in case you need to change
-
-## Template
-The template used for printing is present in the master data. You can alter that for any look and feel change. Key name in master data for template.
-```
-RPR_UIN_CARD_TEMPLATE
-```
-To understand the PDF implementation better you can look at the PrintServiceImpl.java file. 
-
 ## License
 This project is licensed under the terms of [Mozilla Public License 2.0](https://github.com/mosip/mosip-platform/blob/master/LICENSE)
-
-Refer to README in respective folders for details.
