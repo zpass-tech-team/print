@@ -127,11 +127,12 @@ public class RestApiClient {
 				Iterator<String> iterator = httpHeader.keySet().iterator();
 				while (iterator.hasNext()) {
 					String key = iterator.next();
-					if (!(headers.containsKey("Content-Type") && key == "Content-Type"))
+					if (!(headers.containsKey("Content-Type") && key.equals("Content-Type")))
 						headers.add(key, httpHeader.get(key).get(0));
 				}
 				return new HttpEntity<Object>(httpEntity.getBody(), headers);
-			} catch (ClassCastException e) {
+			}
+			catch (ClassCastException | NullPointerException e) {
 				return new HttpEntity<Object>(requestType, headers);
 			}
 		} else
