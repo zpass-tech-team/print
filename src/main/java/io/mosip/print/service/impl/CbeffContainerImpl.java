@@ -10,6 +10,7 @@ import io.mosip.print.entity.BIRInfo;
 import io.mosip.print.entity.BIRInfo.BIRInfoBuilder;
 import io.mosip.print.service.CbeffContainerI;
 import io.mosip.print.util.CbeffValidator;
+import io.mosip.print.util.CbeffXSDValidator;
 
 
 /**
