@@ -32,7 +32,7 @@ Refer to the [configuration guide](configuration.md)
 To run a Print service jar:
 
 ```
-    java -Dspring.profiles.active=<profile> -Dspring.cloud.config.uri=<config-url> -Dspring.cloud.config.label=<config-label> -jar <print-jar-name>.jar
+java -Dspring.profiles.active=<profile> -Dspring.cloud.config.uri=<config-url> -Dspring.cloud.config.label=<config-label> -jar <print-jar-name>.jar
     
 ```
  Example:  
@@ -44,8 +44,9 @@ To run a Print service jar:
 ```
 
 ## Docker 
-1. To run Docker for a Print-service:
+To run as Docker: 
+
 ```
-    $ docker run -dp 3000:3000 <name of the image>
+docker run -dp 3000:3000 <name of the image>
 ```
 
