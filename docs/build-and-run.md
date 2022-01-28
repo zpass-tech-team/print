@@ -3,7 +3,7 @@
 ## Pre-requisites
 Following tools required to run the print service locally.
 
-1. **Ngrok**: To expose local port to remote to communicate with websub
+1. _Ngrok_ to expose local port to remote to communicate with websub
 1. Java 11.
 1. [Config Server](https://docs.mosip.io/1.2.0/modules/module-configuration) running in respective environment.
 
