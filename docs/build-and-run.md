@@ -14,7 +14,7 @@ A reference project to use mosip credential service over websub and print a digi
 
 ### Config-Server
 
-To run Print-service required Config server running in respective env.[config-server-installation-guide](config-server-installation-guide.md)
+To run Print-service required Config server running in respective env. [config-server](https://github.com/mosip/mosip-config/tree/develop3-v3#config-server)
 
 
 ## Build
