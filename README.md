@@ -1,7 +1,7 @@
 # Print Service
 
 ## Overview
-A reference implementation to print `euin`, `reprint`, `qrcode` [card types](https://github.com/mosip/id-repository/tree/v1.2.0/id-repository/credential-service) in PDF format. This service is intended to be custimized and used by a card printing agency who need to onboard onto MOSIP as [Credential Partner]() before deploying the service.  
+A reference implementation to print `euin`, `reprint`, `qrcode` [credential types](https://docs.mosip.io/1.2.0/modules/id-repository#credential-types) in PDF format. This service is intended to be custimized and used by a card printing agency who need to onboard onto MOSIP as [Credential Partner](https://docs.mosip.io/1.2.0/partners#credential-partner-cp) before deploying the service.  
 
 ![](docs/print-service.png)
 
