@@ -131,8 +131,7 @@ public class RestApiClient {
 						headers.add(key, httpHeader.get(key).get(0));
 				}
 				return new HttpEntity<Object>(httpEntity.getBody(), headers);
-			}
-			catch (ClassCastException | NullPointerException e) {
+			} catch (ClassCastException | NullPointerException e) {
 				return new HttpEntity<Object>(requestType, headers);
 			}
 		} else

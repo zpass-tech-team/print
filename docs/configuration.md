@@ -11,7 +11,7 @@ print-default.properties
 registration-processor-print-text-file.json
 identity-mapping.json
 ```
-The above files are located in [mosip-config](https://github.com/mosip/mosip-config/blob/develop3-v3/) repo
+Refer [Module Configuration](https://docs.mosip.io/1.2.0/modules/module-configuration) for location of these files.
 
 ## Template
 The HTML template `RPR_UIN_CARD_TEMPLATE` used for printing is present in the master data. You can alter the same for any look and feel change. Key name in master data for template.  The template located in `template` table of `mosip_master` DB.
@@ -40,8 +40,3 @@ mosip.datashare.partner.id = /your partner id from partner portal
 mosip.datashare.policy.id = /your policy id from partner portal
 CREATEDATASHARE = //datashare url 
 ```
-
-
-
-
-

@@ -92,7 +92,7 @@ public class CryptoCoreUtil {
 		try {
 			KeyStore mosipKeyStore = KeyStore.getInstance("PKCS12");
 			InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
-			mosipKeyStore.load(in, "password@123".toCharArray());
+			mosipKeyStore.load(in, cyptoPassword.toCharArray());
 			ProtectionParameter password = new PasswordProtection(cyptoPassword.toCharArray());
 			privateKeyEntry = (PrivateKeyEntry) mosipKeyStore.getEntry(alias, password);
 		}catch (UnrecoverableEntryException | CertificateException | KeyStoreException | IOException|NoSuchAlgorithmException e) {
