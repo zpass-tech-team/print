@@ -626,6 +626,9 @@ public class PrintServiceImpl implements PrintService{
 			din.read(format, 0, 4);
 			byte[] version = new byte[4];
 			din.read(version, 0, 4);
+			int recordLength = din.readInt();
+			short numberofRepresentionRecord = din.readShort();
+			byte certificationFlag = din.readByte();
 			byte[] temporalSequence = new byte[2];
 			din.read(temporalSequence, 0, 2);
 			int representationLength = din.readInt();
@@ -646,6 +649,8 @@ public class PrintServiceImpl implements PrintService{
 					byte[] landmarkPoints = new byte[noOfLandmarkPoints * 8];
 					rdin.read(landmarkPoints, 0, landmarkPoints.length);
 				}
+				byte faceType = rdin.readByte();
+				byte imageDataType = rdin.readByte();
 				byte[] otherImageInformation = new byte[9];
 				rdin.read(otherImageInformation, 0, otherImageInformation.length);
 				int lengthOfImageData = rdin.readInt();
@@ -660,7 +665,6 @@ public class PrintServiceImpl implements PrintService{
 					ex.getMessage() + ExceptionUtils.getStackTrace(ex));
 		}
 	}
-
 
 	private String getCrdentialSubject(String crdential) {
 		org.json.JSONObject jsonObject = new org.json.JSONObject(crdential);
