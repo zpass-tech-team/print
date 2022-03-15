@@ -81,7 +81,6 @@ import io.mosip.print.spi.CbeffUtil;
 import io.mosip.print.spi.QrCodeGenerator;
 import io.mosip.print.util.AuditLogRequestBuilder;
 import io.mosip.print.util.CbeffToBiometricUtil;
-import io.mosip.print.util.CredentialsVerifier;
 import io.mosip.print.util.CryptoCoreUtil;
 import io.mosip.print.util.CryptoUtil;
 import io.mosip.print.util.DataShareUtil;
@@ -91,6 +90,7 @@ import io.mosip.print.util.RestApiClient;
 import io.mosip.print.util.TemplateGenerator;
 import io.mosip.print.util.Utilities;
 import io.mosip.print.util.WebSubSubscriptionHelper;
+import io.mosip.vercred.CredentialsVerifier;
 
 @Service
 public class PrintServiceImpl implements PrintService{
