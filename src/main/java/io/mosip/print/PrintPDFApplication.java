@@ -13,9 +13,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import io.mosip.print.service.impl.CbeffImpl;
 import io.mosip.print.spi.CbeffUtil;
+import io.mosip.vercred.CredentialsVerifier;
 
 
-@SpringBootApplication(scanBasePackages = { "io.mosip.print.*", "${mosip.auth.adapter.impl.basepackage}"  }, exclude = { DataSourceAutoConfiguration.class,
+@SpringBootApplication(scanBasePackages = { "io.mosip.print.*", "${mosip.auth.adapter.impl.basepackage}" }, exclude = { DataSourceAutoConfiguration.class,
 		HibernateJpaAutoConfiguration.class,
 		CacheAutoConfiguration.class })
 @EnableScheduling
@@ -27,6 +28,11 @@ public class PrintPDFApplication {
 	@Primary
 	public CbeffUtil getCbeffUtil() {
 		return new CbeffImpl();
+	}
+
+	@Bean
+	public CredentialsVerifier credentialsVerifier() {
+		return new CredentialsVerifier();
 	}
 
 	@Bean
