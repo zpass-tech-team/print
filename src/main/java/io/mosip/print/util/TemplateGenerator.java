@@ -86,8 +86,7 @@ public class TemplateGenerator {
 
 		ResponseWrapper<?> responseWrapper;
 		TemplateResponseDto template;
-		printLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.USERID.toString(), "",
-				"TemplateGenerator::getTemplate()::entry");
+		printLogger.debug("TemplateGenerator::getTemplate()::entry");
 
 		try {
 			List<String> pathSegments = new ArrayList<>();

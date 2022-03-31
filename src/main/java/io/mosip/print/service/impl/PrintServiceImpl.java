@@ -159,18 +159,6 @@ public class PrintServiceImpl implements PrintService{
 	@Autowired
 	private QrCodeGenerator<QrVersion> qrCodeGenerator;
 
-
-	/** The Constant VID_CREATE_ID. */
-	public static final String VID_CREATE_ID = "registration.processor.id.repo.generate";
-
-	/** The Constant REG_PROC_APPLICATION_VERSION. */
-	public static final String REG_PROC_APPLICATION_VERSION = "registration.processor.id.repo.vidVersion";
-
-	/** The Constant DATETIME_PATTERN. */
-	public static final String DATETIME_PATTERN = "mosip.print.datetime.pattern";
-
-	public static final String VID_TYPE = "registration.processor.id.repo.vidType";
-
 	/** The cbeffutil. */
 	@Autowired
 	private CbeffUtil cbeffutil;
@@ -250,6 +238,7 @@ public class PrintServiceImpl implements PrintService{
 		String uin = null;
 		LogDescription description = new LogDescription();
 		String password = null;
+		boolean isPhotoSet=false;
 		String individualBio = null;
 		Map<String, Object> attributes = new LinkedHashMap<>();
 		boolean isTransactionSuccessful = false;
@@ -260,31 +249,32 @@ public class PrintServiceImpl implements PrintService{
 			credentialSubject = getCrdentialSubject(credential);
 			org.json.JSONObject credentialSubjectJson = new org.json.JSONObject(credentialSubject);
 			org.json.JSONObject decryptedJson = decryptAttribute(credentialSubjectJson, encryptionPin, credential);
-			individualBio = decryptedJson.getString("biometrics");
-			String individualBiometric = new String(individualBio);
+			if(decryptedJson.has("biometrics")){
+				individualBio = decryptedJson.getString("biometrics");
+				String individualBiometric = new String(individualBio);
+				isPhotoSet = setApplicantPhoto(individualBiometric, attributes);
+				attributes.put("isPhotoSet",isPhotoSet);
+			}
 			uin = decryptedJson.getString("UIN");
 			if (isPasswordProtected) {
 				password = getPassword(uin);
 			}
 			if (credentialType.equalsIgnoreCase("qrcode")) {
-				boolean isQRcodeSet = setQrCode(decryptedJson.toString(), attributes);
+				boolean isQRcodeSet = setQrCode(decryptedJson.toString(), attributes,isPhotoSet);
 				InputStream uinArtifact = templateGenerator.getTemplate(template, attributes, templateLang);
 				pdfbytes = uinCardGenerator.generateUinCard(uinArtifact, UinCardType.PDF,
 						password);
 
 			} else {
-
-			boolean isPhotoSet = setApplicantPhoto(individualBiometric, attributes);
 			if (!isPhotoSet) {
 				printLogger.debug(PlatformErrorMessages.PRT_PRT_APPLICANT_PHOTO_NOT_SET.name());
 			}
 			setTemplateAttributes(decryptedJson.toString(), attributes);
 			attributes.put(IdType.UIN.toString(), uin);
-
 			byte[] textFileByte = createTextFile(decryptedJson.toString());
 			byteMap.put(UIN_TEXT_FILE, textFileByte);
 
-			boolean isQRcodeSet = setQrCode(decryptedJson.toString(), attributes);
+			boolean isQRcodeSet = setQrCode(decryptedJson.toString(), attributes,isPhotoSet);
 			if (!isQRcodeSet) {
 				printLogger.debug(PlatformErrorMessages.PRT_PRT_QRCODE_NOT_SET.name());
 			}
@@ -445,11 +435,13 @@ public class PrintServiceImpl implements PrintService{
 	 *                                                            occurred.
 	 * @throws io.mosip.print.exception.QrcodeGenerationException
 	 */
-	private boolean setQrCode(String qrString, Map<String, Object> attributes)
+	private boolean setQrCode(String qrString, Map<String, Object> attributes,boolean isPhotoSet)
 			throws QrcodeGenerationException, IOException, io.mosip.print.exception.QrcodeGenerationException {
 		boolean isQRCodeSet = false;
 		JSONObject qrJsonObj = JsonUtil.objectMapperReadValue(qrString, JSONObject.class);
-		qrJsonObj.remove("biometrics");
+		if(isPhotoSet) {
+			qrJsonObj.remove("biometrics");
+		}
 		byte[] qrCodeBytes = qrCodeGenerator.generateQrCode(qrJsonObj.toString(), QrVersion.V30);
 		if (qrCodeBytes != null) {
 			String imageString = Base64.encodeBase64String(qrCodeBytes);
