@@ -1,5 +1,6 @@
 package io.mosip.print;
 
+import io.mosip.vercred.CredentialsVerifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
@@ -15,7 +16,7 @@ import io.mosip.print.spi.CbeffUtil;
 
 
 
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class,
+@SpringBootApplication(scanBasePackages = { "io.mosip.print.*" },exclude = { SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class,
 		HibernateJpaAutoConfiguration.class,
 		CacheAutoConfiguration.class })
 public class PrintPDFApplication {
@@ -24,6 +25,11 @@ public class PrintPDFApplication {
 	@Primary
 	public CbeffUtil getCbeffUtil() {
 		return new CbeffImpl();
+	}
+
+	@Bean
+	public CredentialsVerifier credentialsVerifier() {
+		return new CredentialsVerifier();
 	}
 
 	@Bean
