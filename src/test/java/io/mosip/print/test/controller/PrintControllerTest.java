@@ -2,6 +2,7 @@ package io.mosip.print.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.mosip.print.model.Event;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,20 +43,26 @@ public class PrintControllerTest {
 
 	String reqJson;
 
+	EventModel credentialEvent;
+
 	String reqCredentialEventJson;
 
 	@Before
 	public void setup() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		this.mockMvc = MockMvcBuilders.standaloneSetup(printController).build();
-		EventModel credentialEvent = new EventModel();
+		credentialEvent = new EventModel();
+		Event event=new Event();
+		event.setId("test123");
+		credentialEvent.setEvent(event);
 		reqCredentialEventJson = gson.toJson(credentialEvent);
+
 	}
 
 	@Test
 	public void testHandleSubscribeEventSuccess() throws Exception {
 		byte[] pdfbytes = "pdf".getBytes();
-		Mockito.when(printService.generateCard(Mockito.any())).thenReturn(pdfbytes);
+		Mockito.when(printService.generateCard(Mockito.any())).thenReturn(true);
 		mockMvc.perform(MockMvcRequestBuilders.post("/print/callback/notifyPrint")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(reqCredentialEventJson.getBytes()))
 				.andExpect(status().isOk());
