@@ -243,8 +243,8 @@ public class PrintServiceImpl implements PrintService{
 			if (!verified) {
 				printLogger.error("Received Credentials failed in verifiable credential verify method. So, the credentials will not be printed." +
 						" Id: {}, Transaction Id: {}", eventModel.getEvent().getId(), eventModel.getEvent().getTransactionId());
+				return false;
 			}
-			return false;
 		}
 		Map proofMap = new HashMap<String, String>();
 		proofMap = (Map) eventModel.getEvent().getData().get("proof");
