@@ -199,6 +199,7 @@ public class PrintServiceImpl implements PrintService{
 			}
 			String ecryptionPin = eventModel.getEvent().getData().get("protectionKey").toString();
 			String decodedCredential = cryptoCoreUtil.decrypt(credential);
+			printLogger.debug("vc is printed security valuation.... : {}",decodedCredential);
 			if (verifyCredentialsFlag){
 				printLogger.info("Configured received credentials to be verified. Flag {}", verifyCredentialsFlag);
 				boolean verified = credentialsVerifier.verifyCredentials(decodedCredential);
@@ -249,7 +250,6 @@ public class PrintServiceImpl implements PrintService{
 			credentialSubject = getCrdentialSubject(credential);
 			org.json.JSONObject credentialSubjectJson = new org.json.JSONObject(credentialSubject);
 			org.json.JSONObject decryptedJson = decryptAttribute(credentialSubjectJson, encryptionPin, credential);
-			printLogger.debug("vc is printed security valuation.... : {}",decryptedJson.toString());
 			if(decryptedJson.has("biometrics")){
 				individualBio = decryptedJson.getString("biometrics");
 				String individualBiometric = new String(individualBio);
