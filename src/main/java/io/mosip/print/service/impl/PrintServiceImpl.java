@@ -13,19 +13,12 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 
+import io.mosip.vercred.CredentialsVerifier;
 import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
@@ -213,6 +206,9 @@ public class PrintServiceImpl implements PrintService{
 	private Environment env;
 
 	@Autowired
+	private CredentialsVerifier credentialsVerifier;
+
+	@Autowired
 	private DigitalSignatureUtility digitalSignatureUtility;
 	
 	@Autowired
@@ -224,10 +220,14 @@ public class PrintServiceImpl implements PrintService{
 	@Value("${mosip.datashare.policy.id}")
 	private String policyId;
 
-	public byte[] generateCard(EventModel eventModel) throws Exception {
-		Map<String, byte[]> byteMap = new HashMap<>();
-		String decodedCrdential = null;
+	@Value("${mosip.print.verify.credentials.flag:true}")
+	private boolean verifyCredentialsFlag;
+
+	public boolean generateCard(EventModel eventModel) throws Exception {
+		String decodedCredential = null;
+		boolean isPrinted = false;
 		String credential = null;
+		try{
 		if (eventModel.getEvent().getDataShareUri() == null || eventModel.getEvent().getDataShareUri().isEmpty()) {
 			credential = eventModel.getEvent().getData().get("credential").toString();
 		} else {
@@ -236,14 +236,28 @@ public class PrintServiceImpl implements PrintService{
 			credential = restApiClient.getApi(dataShareUri, String.class);
 		}
 		String ecryptionPin = eventModel.getEvent().getData().get("protectionKey").toString();
-		decodedCrdential = cryptoCoreUtil.decrypt(credential);
+		decodedCredential = cryptoCoreUtil.decrypt(credential);
+		if (verifyCredentialsFlag){
+			printLogger.info("Configured received credentials to be verified. Flag {}", verifyCredentialsFlag);
+			boolean verified = credentialsVerifier.verifyCredentials(decodedCredential);
+			if (!verified) {
+				printLogger.error("Received Credentials failed in verifiable credential verify method. So, the credentials will not be printed." +
+						" Id: {}, Transaction Id: {}", eventModel.getEvent().getId(), eventModel.getEvent().getTransactionId());
+				return false;
+			}
+		}
 		Map proofMap = new HashMap<String, String>();
 		proofMap = (Map) eventModel.getEvent().getData().get("proof");
 		String sign = proofMap.get("signature").toString();
-		byte[] pdfbytes = getDocuments(decodedCrdential,
+		byte[] pdfbytes = getDocuments(decodedCredential,
 				eventModel.getEvent().getData().get("credentialType").toString(), ecryptionPin,
 				eventModel.getEvent().getTransactionId(), getSignature(sign, credential), "UIN", false).get("uinPdf");
-		return pdfbytes;
+		isPrinted = true;
+		}catch (Exception e){
+			printLogger.error(e.getMessage() , e);
+			isPrinted = false;
+		}
+		return isPrinted;
 	}
 
 	private String getSignature(String sign, String crdential) {
@@ -895,7 +909,9 @@ public class PrintServiceImpl implements PrintService{
 
 		String strq = null;
 		org.json.JSONArray jsonArray = (org.json.JSONArray) jsonObj.get("protectedAttributes");
-		if (!jsonArray.isEmpty()) {
+		if (Objects.isNull(jsonArray)) {
+			return data;
+		}
 		for (Object str : jsonArray) {
 
 				CryptoWithPinRequestDto cryptoWithPinRequestDto = new CryptoWithPinRequestDto();
@@ -924,8 +940,6 @@ public class PrintServiceImpl implements PrintService{
 				data.put((String) str, cryptoWithPinResponseDto.getData());
 			
 			}
-
-		}
 		return data;
 	}
 	/*
