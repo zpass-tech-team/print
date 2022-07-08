@@ -245,6 +245,7 @@ public class PrintServiceImpl implements PrintService{
 		boolean isTransactionSuccessful = false;
 		String template = UIN_CARD_TEMPLATE;
 		byte[] pdfbytes = null;
+		boolean isQRcodeSet=false;
 		try {
 
 			credentialSubject = getCrdentialSubject(credential);
@@ -261,7 +262,7 @@ public class PrintServiceImpl implements PrintService{
 				password = getPassword(uin);
 			}
 			if (credentialType.equalsIgnoreCase("qrcode")) {
-				boolean isQRcodeSet = setQrCode(decryptedJson.toString(), attributes,isPhotoSet);
+				isQRcodeSet = setQrCode(decryptedJson.toString(), attributes,isPhotoSet);
 				InputStream uinArtifact = templateGenerator.getTemplate(template, attributes, templateLang);
 				pdfbytes = uinCardGenerator.generateUinCard(uinArtifact, UinCardType.PDF,
 						password);
@@ -274,8 +275,11 @@ public class PrintServiceImpl implements PrintService{
 			attributes.put(IdType.UIN.toString(), uin);
 			byte[] textFileByte = createTextFile(decryptedJson.toString());
 			byteMap.put(UIN_TEXT_FILE, textFileByte);
-
-			boolean isQRcodeSet = setQrCode(decryptedJson.toString(), attributes,isPhotoSet);
+			if (credentialType.equalsIgnoreCase("eUIN_with_faceQR")) {
+				isQRcodeSet = setFaceQrCode(decryptedJson.toString(), attributes, isPhotoSet);
+			}else{
+				isQRcodeSet = setQrCode(decryptedJson.toString(), attributes, isPhotoSet);
+			}
 			if (!isQRcodeSet) {
 				printLogger.debug(PlatformErrorMessages.PRT_PRT_QRCODE_NOT_SET.name());
 			}
@@ -452,6 +456,39 @@ public class PrintServiceImpl implements PrintService{
 
 		return isQRCodeSet;
 	}
+	/**
+	 * Sets the Face qr code.
+	 *
+	 * @param attributes   the attributes
+	 * @return true, if successful
+	 * @throws QrcodeGenerationException                          the qrcode
+	 *                                                            generation
+	 *                                                            exception
+	 * @throws IOException                                        Signals that an
+	 *                                                            I/O exception has
+	 *                                                            occurred.
+	 * @throws io.mosip.print.exception.QrcodeGenerationException
+	 */
+	private boolean setFaceQrCode(String qrString, Map<String, Object> attributes,boolean isPhotoSet)
+			throws QrcodeGenerationException, IOException, io.mosip.print.exception.QrcodeGenerationException {
+		boolean isQRCodeSet = false;
+		JSONObject qrJsonObj = JsonUtil.objectMapperReadValue(qrString, JSONObject.class);
+		String applicantPhoto="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
+		if(isPhotoSet) {
+			qrJsonObj.remove("biometrics");
+			qrJsonObj.put(APPLICANT_PHOTO,applicantPhoto);
+		}
+		System.out.println(">>>>>>>>>>>>>>>>>>>"+qrJsonObj.toString());
+		byte[] qrCodeBytes = qrCodeGenerator.generateQrCode(qrJsonObj.toString(), QrVersion.V40);
+		if (qrCodeBytes != null) {
+			String imageString = Base64.encodeBase64String(qrCodeBytes);
+			attributes.put(QRCODE, "data:image/png;base64," + imageString);
+			isQRCodeSet = true;
+		}
+
+		return isQRCodeSet;
+	}
+
 
 	/**
 	 * Sets the applicant photo.
