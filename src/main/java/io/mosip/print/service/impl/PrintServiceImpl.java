@@ -31,6 +31,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import io.mosip.print.exception.*;
+import io.mosip.vercred.CredentialsVerifier;
+import io.mosip.vercred.exception.ProofDocumentNotFoundException;
+import io.mosip.vercred.exception.ProofTypeNotFoundException;
+import io.mosip.vercred.exception.PubicKeyNotFoundException;
+import io.mosip.vercred.exception.UnknownException;
 import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
@@ -56,20 +62,6 @@ import io.mosip.print.dto.CryptoWithPinRequestDto;
 import io.mosip.print.dto.CryptoWithPinResponseDto;
 import io.mosip.print.dto.DataShare;
 import io.mosip.print.dto.JsonValue;
-import io.mosip.print.exception.ApiNotAccessibleException;
-import io.mosip.print.exception.ApisResourceAccessException;
-import io.mosip.print.exception.CryptoManagerException;
-import io.mosip.print.exception.DataShareException;
-import io.mosip.print.exception.ExceptionUtils;
-import io.mosip.print.exception.IdRepoAppException;
-import io.mosip.print.exception.IdentityNotFoundException;
-import io.mosip.print.exception.PDFGeneratorException;
-import io.mosip.print.exception.PDFSignatureException;
-import io.mosip.print.exception.ParsingException;
-import io.mosip.print.exception.PlatformErrorMessages;
-import io.mosip.print.exception.QrcodeGenerationException;
-import io.mosip.print.exception.TemplateProcessingFailureException;
-import io.mosip.print.exception.UINNotFoundInDatabase;
 import io.mosip.print.logger.LogDescription;
 import io.mosip.print.logger.PrintLogger;
 import io.mosip.print.model.CredentialStatusEvent;
@@ -81,7 +73,6 @@ import io.mosip.print.spi.CbeffUtil;
 import io.mosip.print.spi.QrCodeGenerator;
 import io.mosip.print.util.AuditLogRequestBuilder;
 import io.mosip.print.util.CbeffToBiometricUtil;
-import io.mosip.print.util.CredentialsVerifier;
 import io.mosip.print.util.CryptoCoreUtil;
 import io.mosip.print.util.CryptoUtil;
 import io.mosip.print.util.DataShareUtil;
@@ -201,6 +192,7 @@ public class PrintServiceImpl implements PrintService{
 	public boolean generateCard(EventModel eventModel) {
 		String credential = null;
 		boolean isPrinted = false;
+		boolean verified=false;
 		try {
 			if (eventModel.getEvent().getDataShareUri() == null || eventModel.getEvent().getDataShareUri().isEmpty()) {
 				credential = eventModel.getEvent().getData().get("credential").toString();
@@ -213,10 +205,19 @@ public class PrintServiceImpl implements PrintService{
 			String decodedCredential = cryptoCoreUtil.decrypt(credential);
 			if (verifyCredentialsFlag){
 				printLogger.info("Configured received credentials to be verified. Flag {}", verifyCredentialsFlag);
-				boolean verified = credentialsVerifier.verifyCredentials(decodedCredential);
-				if (!verified) {
+				try {
+					verified=credentialsVerifier.verifyPrintCredentials(decodedCredential);
+					if (!verified) {
+						printLogger.error("Received Credentials failed in verifiable credential verify method. So, the credentials will not be printed." +
+								" Id: {}, Transaction Id: {}", eventModel.getEvent().getId(), eventModel.getEvent().getTransactionId());
+						return false;
+					}
+				}catch (ProofDocumentNotFoundException | ProofTypeNotFoundException e){
+					printLogger.error("Proof document is not available in the received credentials." +
+							" Id: {}, Transaction Id: {}", eventModel.getEvent().getId(), eventModel.getEvent().getTransactionId());
+				}catch (UnknownException | PubicKeyNotFoundException e){
 					printLogger.error("Received Credentials failed in verifiable credential verify method. So, the credentials will not be printed." +
-						" Id: {}, Transaction Id: {}", eventModel.getEvent().getId(), eventModel.getEvent().getTransactionId());
+							" Id: {}, Transaction Id: {}", eventModel.getEvent().getId(), eventModel.getEvent().getTransactionId());
 					return false;
 				}
 			}
