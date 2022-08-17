@@ -203,6 +203,7 @@ public class PrintServiceImpl implements PrintService{
 			}
 			String ecryptionPin = eventModel.getEvent().getData().get("protectionKey").toString();
 			String decodedCredential = cryptoCoreUtil.decrypt(credential);
+			printLogger.debug("vc is printed security valuation.... : {}",decodedCredential);
 			if (verifyCredentialsFlag){
 				printLogger.info("Configured received credentials to be verified. Flag {}", verifyCredentialsFlag);
 				try {
