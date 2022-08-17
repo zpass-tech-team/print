@@ -1,5 +1,6 @@
 package io.mosip.print;
 
+import io.mosip.vercred.CredentialsVerifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
@@ -27,6 +28,11 @@ public class PrintPDFApplication {
 	@Primary
 	public CbeffUtil getCbeffUtil() {
 		return new CbeffImpl();
+	}
+
+	@Bean
+	public CredentialsVerifier credentialsVerifier() {
+		return new CredentialsVerifier();
 	}
 
 	@Bean
