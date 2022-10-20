@@ -6,8 +6,7 @@ public interface PrintService {
     
 	/**
 	 * Get the card
-	 * 
-	 * 
+	 *  
 	 * @param eventModel
 	 * @return
 	 * @throws Exception
