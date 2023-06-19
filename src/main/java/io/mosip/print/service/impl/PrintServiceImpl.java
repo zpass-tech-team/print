@@ -213,8 +213,7 @@ public class PrintServiceImpl implements PrintService {
 			}
             byte[] pdfbytes = getDocuments(decodedCredential,
                     eventModel.getEvent().getData().get("credentialType").toString(), eventModel.getEvent().getData().get("protectionKey").toString(),
-                    eventModel.getEvent().getTransactionId(), isPasswordProtected,
-                    (eventModel.getEvent().getData().get("registrationId") == null ? null : eventModel.getEvent().getData().get("registrationId").toString())).get("uinPdf");
+                    eventModel.getEvent().getTransactionId(), isPasswordProtected).get("uinPdf");
             isPrinted = true;
         } catch (Exception e) {
             printLogger.error(e.getMessage(), e);
@@ -289,7 +288,7 @@ public class PrintServiceImpl implements PrintService {
 	 * java.lang.String, java.lang.String, boolean)
 	 */
 	private Map<String, byte[]> getDocuments(String credential, String credentialType, String encryptionPin,
-			String requestId, boolean isPasswordProtected, String registrationId) {
+			String requestId, boolean isPasswordProtected) {
 		printLogger.debug("PrintServiceImpl::getDocuments()::entry");
 		String credentialSubject;
 		Map<String, byte[]> byteMap = new HashMap<>();
@@ -330,7 +329,6 @@ public class PrintServiceImpl implements PrintService {
 			}
 			setTemplateAttributes(decryptedJson.toString(), attributes);
 			attributes.put(IdType.UIN.toString(), uin);
-			attributes.put(IdType.RID.toString(), registrationId);
 			byte[] textFileByte = createTextFile(decryptedJson.toString());
 			byteMap.put(UIN_TEXT_FILE, textFileByte);
 			if (credentialType.equalsIgnoreCase("eUIN_with_faceQR")) {
