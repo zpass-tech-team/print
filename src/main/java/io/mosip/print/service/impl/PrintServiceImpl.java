@@ -434,8 +434,7 @@ public class PrintServiceImpl implements PrintService {
 	}
 
     private String getDatashareUrl(byte[] data) throws IOException, DataShareException, ApiNotAccessibleException {
-        DataShare dataShare = dataShareUtil.getDataShare(data, policyId, partnerId);
-        return dataShare.getUrl().replace("http://", "https://");
+        return dataShareUtil.getDataShare(data, policyId, partnerId).getUrl();
     }
 
 	/**
