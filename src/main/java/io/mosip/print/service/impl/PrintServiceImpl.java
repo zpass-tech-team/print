@@ -104,7 +104,8 @@ import io.mosip.vercred.CredentialsVerifier;
 @Service
 public class PrintServiceImpl implements PrintService {
 
-	private String topic="CREDENTIAL_STATUS_UPDATE";
+	private static String topic="CREDENTIAL_STATUS_UPDATE";
+	private static int passwordLengthPerAttribute=4;
 	
 	@Autowired
 	private WebSubSubscriptionHelper webSubSubscriptionHelper;
@@ -196,9 +197,6 @@ public class PrintServiceImpl implements PrintService {
 
     @Value("${mosip.print.service.uincard.pdf.password.enable:false}")
     private boolean isPasswordProtected;
-
-	@Value("${mosip.print.service.uincard.password.length:4}")
-	private int passwordLength;
 
 	@Override
     public boolean generateCard(EventModel eventModel) {
@@ -682,13 +680,13 @@ public class PrintServiceImpl implements PrintService {
 
 	private String getFormattedPasswordAttribute(String value) {
 		String password = value.replaceAll("[^a-zA-Z0-9]+","");
-		if (password.length() >= passwordLength) {
-			return password.substring(0, passwordLength);
+		if (password.length() >= passwordLengthPerAttribute) {
+			return password.substring(0, passwordLengthPerAttribute);
 		} else {
-			while (password.length() < passwordLength) {
+			while (password.length() < passwordLengthPerAttribute) {
 				password = password.repeat(2);
-				if (password.length() >= passwordLength) {
-					password = password.substring(0, passwordLength);
+				if (password.length() >= passwordLengthPerAttribute) {
+					password = password.substring(0, passwordLengthPerAttribute);
 					break;
 				}
 			}
