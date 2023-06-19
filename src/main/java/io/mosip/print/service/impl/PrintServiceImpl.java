@@ -197,6 +197,9 @@ public class PrintServiceImpl implements PrintService {
     @Value("${mosip.print.service.uincard.pdf.password.enable:false}")
     private boolean isPasswordProtected;
 
+	@Value("${mosip.print.service.uincard.password.length:4}")
+	private int passwordLength;
+
 	@Override
     public boolean generateCard(EventModel eventModel) {
         boolean isPrinted = false;
@@ -205,10 +208,12 @@ public class PrintServiceImpl implements PrintService {
             String credential = getCredential(eventModel);
             String decodedCredential = decryptCredential(credential);
             printLogger.debug("vc is printed security valuation.... : {}", decodedCredential);
-            if (!hasPrintCredentialVerified(eventModel, decodedCredential)) return false;
+            if (!hasPrintCredentialVerified(eventModel, decodedCredential)) {
+				return false;
+			}
             byte[] pdfbytes = getDocuments(decodedCredential,
                     eventModel.getEvent().getData().get("credentialType").toString(), eventModel.getEvent().getData().get("protectionKey").toString(),
-                    eventModel.getEvent().getTransactionId(), "UIN", isPasswordProtected, eventModel.getEvent().getId(),
+                    eventModel.getEvent().getTransactionId(), isPasswordProtected,
                     (eventModel.getEvent().getData().get("registrationId") == null ? null : eventModel.getEvent().getData().get("registrationId").toString())).get("uinPdf");
             isPrinted = true;
         } catch (Exception e) {
@@ -284,9 +289,7 @@ public class PrintServiceImpl implements PrintService {
 	 * java.lang.String, java.lang.String, boolean)
 	 */
 	private Map<String, byte[]> getDocuments(String credential, String credentialType, String encryptionPin,
-			String requestId,
-			String cardType,
-			boolean isPasswordProtected, String refId, String registrationId) {
+			String requestId, boolean isPasswordProtected, String registrationId) {
 		printLogger.debug("PrintServiceImpl::getDocuments()::entry");
 		String credentialSubject;
 		Map<String, byte[]> byteMap = new HashMap<>();
@@ -434,11 +437,6 @@ public class PrintServiceImpl implements PrintService {
         DataShare dataShare = dataShareUtil.getDataShare(data, policyId, partnerId);
         return dataShare.getUrl().replace("http://", "https://");
     }
-
-    private String getRid(Object id) {
-        return id.toString().split("/credentials/")[1];
-    }
-
 
 	/**
 	 * Creates the text file.
@@ -673,30 +671,33 @@ public class PrintServiceImpl implements PrintService {
             }
             if (obj instanceof JSONArray) {
                 JsonValue[] jsonValues = JsonUtil.mapJsonNodeToJavaObject(JsonValue.class, (JSONArray) obj);
-                uinCardPd = uinCardPd.concat(getFormattedPasswordAttribute(getParameter(jsonValues, templateLang)).substring(0, 4));
+                uinCardPd = uinCardPd.concat(getFormattedPasswordAttribute(getParameter(jsonValues, templateLang)));
 
             } else if (object instanceof org.json.simple.JSONObject) {
                 org.json.simple.JSONObject json = (org.json.simple.JSONObject) object;
-                uinCardPd = uinCardPd.concat((String) json.get(VALUE));
+                uinCardPd = uinCardPd.concat(getFormattedPasswordAttribute((String) json.get(VALUE)));
             } else {
-                uinCardPd = uinCardPd.concat(getFormattedPasswordAttribute(object.toString()).substring(0, 4));
+                uinCardPd = uinCardPd.concat(getFormattedPasswordAttribute(object.toString()));
             }
         }
         return uinCardPd;
     }
 
-    private String getFormattedPasswordAttribute(String password) {
-        password = password.replaceAll("[^a-zA-Z0-9]+","");
-        if (password.length() == 3) {
-            return password = password.concat(password.substring(0, 1));
-        } else if (password.length() == 2) {
-            return password = password.repeat(2);
-        } else if (password.length() == 1) {
-            return password = password.repeat(4);
-        } else {
-            return password;
-        }
-    }
+	private String getFormattedPasswordAttribute(String value) {
+		String password = value.replaceAll("[^a-zA-Z0-9]+","");
+		if (password.length() >= passwordLength) {
+			return password.substring(0, passwordLength);
+		} else {
+			while (password.length() < passwordLength) {
+				password = password.repeat(2);
+				if (password.length() >= passwordLength) {
+					password = password.substring(0, passwordLength);
+					break;
+				}
+			}
+		}
+		return password;
+	}
 
 	/**
 	 * Gets the parameter.
