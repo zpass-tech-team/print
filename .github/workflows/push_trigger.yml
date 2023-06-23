@@ -8,6 +8,7 @@ on:
       - master
       - 1.*
       - develop
+      - MOSIP-28161
 jobs:
   build:
     runs-on: ubuntu-latest
