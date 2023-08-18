@@ -211,8 +211,8 @@
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-websubclient-api</artifactId>
-			<version>${kernel.websub.version}</version>
+			<artifactId>kernel-auth-adapter</artifactId>
+			<version>$1.2.1-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.bouncycastle</groupId>
@@ -267,6 +267,10 @@
             <enabled>false</enabled>
             </snapshots>
         </repository>
+	<repository>
+            <id>danubetech-maven-public</id>
+            <url>https://repo.danubetech.com/repository/maven-public/</url>
+        </repository>    
     </repositories>
 	
 	<distributionManagement>
