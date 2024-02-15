@@ -20,7 +20,7 @@ on:
       - develop
       - MOSIP*
       - release*
-      - DSD-4566]
+      - dsd-4566
 
 jobs:
   build-maven-print:
